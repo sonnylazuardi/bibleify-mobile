@@ -6,6 +6,8 @@ Beautiful & fast multi-platform offline bible app
 
 ![demo](https://i.imgur.com/Dy5xYL2.gif)
 
+Pre-alpha (proof of concept) version: https://appetize.io/app/nq4753funuudrqdr37fn0gryur?device=iphone5s&scale=75&orientation=portrait&osVersion=11.0
+
 ## Features
 
 ### Offline 🌩️
