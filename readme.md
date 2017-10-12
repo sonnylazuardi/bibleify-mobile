@@ -2,11 +2,7 @@
 
 Beautiful & fast multi-platform offline bible app
 
-![cover](https://i.imgur.com/uyXdvN1.png)
-
-![demo](https://i.imgur.com/Dy5xYL2.gif)
-
-Pre-alpha (proof of concept) version: https://appetize.io/app/nq4753funuudrqdr37fn0gryur?device=iphone5s&scale=75&orientation=portrait&osVersion=11.0
+![demo](https://i.imgur.com/lQjYMLt.gif)
 
 ## Features
 
@@ -22,14 +18,20 @@ Search as you type, very fast. (because of realm js)
 
 Just type the book and chapter, then you directly go there
 
+### Dramatic Sound 🔊
+
+Experience the dramatic sound that describe the situation of the bible story
+All the sound are take from http://alkitabsuara.com
+
 ### Milestone
 
 - [x] offline database
 - [x] react native android & ios
-- [ ] publish on android play store and ios app store
-- [ ] add note
+- [x] publish on android play store and ios app store
+- [x] add Alkitab Suara streaming (Audio Bible)
+- [ ] add other bible languages & versions
+- [ ] add bookmark
 - [ ] desktop app - electron
-- [ ] audio bible - alkitab suara
 
 ## Tech Stacks
 
