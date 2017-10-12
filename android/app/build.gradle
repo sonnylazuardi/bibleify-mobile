@@ -82,7 +82,7 @@ apply from: "../../node_modules/react-native/react.gradle"
  * Upload all the APKs to the Play Store and people will download
  * the correct one based on the CPU architecture of their device.
  */
-def enableSeparateBuildPerCPUArchitecture = false
+def enableSeparateBuildPerCPUArchitecture = true
 
 /**
  * Run Proguard to shrink the Java bytecode in release builds.
@@ -94,7 +94,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.alkitabapp"
+        applicationId "com.sonnylab.alkitabapp"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
@@ -107,7 +107,7 @@ android {
         abi {
             reset()
             enable enableSeparateBuildPerCPUArchitecture
-            universalApk false  // If true, also generate a universal APK
+            universalApk true  // If true, also generate a universal APK
             include "armeabi-v7a", "x86"
         }
     }
@@ -133,6 +133,10 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-video')
+    compile project(':react-native-music-control')
+    compile project(':react-native-audio-streaming')
+    compile project(':react-native-tts')
     compile project(':react-native-vector-icons')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-fs')
