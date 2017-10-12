@@ -27,6 +27,8 @@ import GestureRecognizer, {
 import Icon from "react-native-vector-icons/Ionicons";
 import Video from "react-native-video";
 
+const CLIENT_ID = "<INSERT SOUNDCLOUD ID HERE>";
+
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
@@ -58,7 +60,9 @@ class PassageScreen extends Component {
     streamUrl: null,
     streamChapter: null,
     isLoadingSound: true,
-    paused: false
+    paused: false,
+    streamDuration: 0,
+    streamCurrentTime: 0
   };
   componentDidUpdate(prevProps, prevState) {
     if (
@@ -329,7 +333,7 @@ class PassageScreen extends Component {
   }
   _onPlayStreaming() {
     const { activeBook, activeChapter } = this.state;
-    const url = `https://api.soundcloud.com/playlists/${activeBook.playlistId}?client_id=b05c630c718333adaf44c63b4deb5c88&limit=150&offset=0`;
+    const url = `https://api.soundcloud.com/playlists/${activeBook.playlistId}?client_id=${CLIENT_ID}&limit=150&offset=0`;
     console.log(url);
 
     fetch(url)
@@ -359,11 +363,13 @@ class PassageScreen extends Component {
             this.setState(
               {
                 streamUrl: null,
-                streamChapter: null
+                streamChapter: null,
+                streamDuration: 0,
+                streamCurrentTime: 0
               },
               () => {
                 setTimeout(() => {
-                  const streamUrl = `${streamSong.stream}?client_id=b05c630c718333adaf44c63b4deb5c88`;
+                  const streamUrl = `${streamSong.stream}?client_id=${CLIENT_ID}`;
                   this.setState({
                     streamUrl,
                     streamChapter: {
@@ -377,7 +383,7 @@ class PassageScreen extends Component {
               }
             );
           } else {
-            const streamUrl = `${streamSong.stream}?client_id=b05c630c718333adaf44c63b4deb5c88`;
+            const streamUrl = `${streamSong.stream}?client_id=${CLIENT_ID}`;
             this.setState({
               streamUrl,
               streamChapter: {
@@ -529,10 +535,19 @@ class PassageScreen extends Component {
         isLoadingSound: false
       });
     }
-    console.log("PROGRESS", currentTime);
+    this.setState({
+      streamCurrentTime: currentTime
+    });
+    // console.log("PROGRESS", currentTime);
   };
 
   onPlayEnd = () => {};
+
+  onLoad = data => {
+    this.setState({
+      streamDuration: data.duration
+    });
+  };
 
   onTogglePaused() {
     this.setState({
@@ -546,6 +561,62 @@ class PassageScreen extends Component {
       streamUrl: null,
       streamChapter: null
     });
+  }
+
+  _renderPlayer() {
+    const {
+      streamUrl,
+      streamChapter,
+      paused,
+      isLoadingSound,
+      streamDuration,
+      streamCurrentTime
+    } = this.state;
+    console.log("current", streamCurrentTime, "duration", streamDuration);
+    const progress = streamCurrentTime / streamDuration * 100;
+    console.log("PROGRESS", progress);
+    return (
+      <View style={[styles.player, { bottom: streamUrl ? 0 : -80 }]}>
+        <View style={styles.row}>
+          {isLoadingSound ? (
+            <View style={styles.playButton}>
+              <ActivityIndicator />
+            </View>
+          ) : (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.playButton}
+              onPress={() => this.onTogglePaused()}
+            >
+              {paused ? (
+                <Icon name="ios-play" size={25} color="#1f364d" />
+              ) : (
+                <Icon name="ios-pause" size={25} color="#1f364d" />
+              )}
+            </TouchableOpacity>
+          )}
+          <Text style={styles.playerText}>
+            {streamChapter && streamChapter.activeBook.name_id}{" "}
+            {streamChapter && streamChapter.activeChapter}
+          </Text>
+          <Image
+            source={require("AlkitabApp/assets/alkitabsuara.png")}
+            style={styles.playerImage}
+            resizeMode={"contain"}
+          />
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.closeButton}
+            onPress={() => this.onClosePlayer()}
+          >
+            <Icon name="ios-close" size={30} color="#fff" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.progressWrapper}>
+          <View style={[styles.progressLine, { width: `${progress}%` }]} />
+        </View>
+      </View>
+    );
   }
 
   render() {
@@ -627,48 +698,13 @@ class PassageScreen extends Component {
               playWhenInactive={true}
               onProgress={this.onPlayProgress}
               onEnd={this.onPlayEnd}
+              onLoad={this.onLoad}
               resizeMode="cover"
               repeat={false}
             />
           ) : null}
         </ScrollView>
-        <View style={[styles.player, { bottom: streamUrl ? 0 : -80 }]}>
-          <View style={styles.row}>
-            {isLoadingSound ? (
-              <View style={styles.playButton}>
-                <ActivityIndicator />
-              </View>
-            ) : (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                style={styles.playButton}
-                onPress={() => this.onTogglePaused()}
-              >
-                {paused ? (
-                  <Icon name="ios-play" size={25} color="#1f364d" />
-                ) : (
-                  <Icon name="ios-pause" size={25} color="#1f364d" />
-                )}
-              </TouchableOpacity>
-            )}
-            <Text style={styles.playerText}>
-              {streamChapter && streamChapter.activeBook.name_id}{" "}
-              {streamChapter && streamChapter.activeChapter}
-            </Text>
-            <Image
-              source={require("AlkitabApp/assets/alkitabsuara.png")}
-              style={styles.playerImage}
-              resizeMode={"contain"}
-            />
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.closeButton}
-              onPress={() => this.onClosePlayer()}
-            >
-              <Icon name="ios-close" size={30} color="#fff" />
-            </TouchableOpacity>
-          </View>
-        </View>
+        {this._renderPlayer()}
       </DrawerLayout>
     );
   }
@@ -847,6 +883,16 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "#fff",
     paddingHorizontal: 10
+  },
+  progressWrapper: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    height: 4
+  },
+  progressLine: {
+    backgroundColor: "#fff",
+    height: 3
   }
 });
 
