@@ -51,3 +51,6 @@ buck-out/
 fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
+android/app/app-armeabi-v7a-release.apk
+android/app/app-universal-release.apk
+android/app/app-x86-release.apk
