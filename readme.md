@@ -1,6 +1,6 @@
 # Alkitab App
 
-Beautiful & fast multi-platform offline bible app
+📖 Beautiful & fast offline bible app with 🔊 dramatic sound (AlkitabSuara) using react native & realm
 
 ![demo](https://i.imgur.com/lQjYMLt.gif)
 
