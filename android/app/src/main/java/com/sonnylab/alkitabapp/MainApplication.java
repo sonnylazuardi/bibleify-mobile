@@ -1,4 +1,4 @@
-package com.alkitabapp;
+package com.sonnylab.alkitabapp;
 
 import android.app.Application;
 

@@ -45,12 +45,12 @@ android_library(
 
 android_build_config(
     name = "build_config",
-    package = "com.alkitabapp",
+    package = "com.sonnylab.alkitabapp",
 )
 
 android_resource(
     name = "res",
-    package = "com.alkitabapp",
+    package = "com.sonnylab.alkitabapp",
     res = "src/main/res",
 )
 
