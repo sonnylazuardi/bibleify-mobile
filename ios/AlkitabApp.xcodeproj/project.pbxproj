@@ -36,6 +36,7 @@
 		2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */; };
 		2D02E4C91E0B4AEC006451C7 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* AlkitabAppTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* AlkitabAppTests.m */; };
+		2F6BBFF01F8FD50C0002B150 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2F31CFC41F8E3010002928DC /* LaunchScreen.xib */; };
 		2FAF14FD1F7E2EBD0014B227 /* libStreamingKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FAF14FC1F7E2EA60014B227 /* libStreamingKit.a */; };
 		2FC81A051F6AA9BB006F8F22 /* tb.realm in Resources */ = {isa = PBXBuildFile; fileRef = 2FC81A031F6AA98D006F8F22 /* tb.realm */; };
 		2FC81A061F6AA9BB006F8F22 /* tb.realm.lock in Resources */ = {isa = PBXBuildFile; fileRef = 2FC81A041F6AA98D006F8F22 /* tb.realm.lock */; };
@@ -1387,6 +1388,7 @@
 				310319DA11F346B08614B3F3 /* Ionicons.ttf in Resources */,
 				5E8017D60C16486FBD2DAE1A /* MaterialCommunityIcons.ttf in Resources */,
 				764F546E77894521A9DC6E87 /* MaterialIcons.ttf in Resources */,
+				2F6BBFF01F8FD50C0002B150 /* LaunchScreen.xib in Resources */,
 				4B2DEBB58A704EEB9164F762 /* Octicons.ttf in Resources */,
 				EA3C3CD4350541F4A03E385E /* SimpleLineIcons.ttf in Resources */,
 				789E91D0F92445DCA9F8FE10 /* Zocial.ttf in Resources */,
@@ -1599,6 +1601,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonnylab.alkitabapp;
 				PRODUCT_NAME = AlkitabApp;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1630,6 +1633,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.sonnylab.alkitabapp;
 				PRODUCT_NAME = AlkitabApp;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

@@ -2,6 +2,8 @@
 
 📖 Beautiful & fast offline bible app with 🔊 dramatic sound (AlkitabSuara) using react native & realm
 
+![cover](https://i.imgur.com/3ClKypS.png)
+
 ![demo](https://i.imgur.com/lQjYMLt.gif)
 
 ## Features
