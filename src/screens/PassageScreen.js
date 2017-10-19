@@ -26,8 +26,9 @@ import GestureRecognizer, {
 } from "react-native-swipe-gestures";
 import Icon from "react-native-vector-icons/Ionicons";
 import Video from "react-native-video";
+import MusicControl from "react-native-music-control";
 
-const CLIENT_ID = "<INSERT SOUNDCLOUD ID HERE>";
+const CLIENT_ID = "<INSERT SOUNDCLOUD KEY HERE>";
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -535,24 +536,79 @@ class PassageScreen extends Component {
         isLoadingSound: false
       });
     }
-    this.setState({
-      streamCurrentTime: currentTime
-    });
+    this.setState(
+      {
+        streamCurrentTime: currentTime
+      },
+      () => {
+        MusicControl.updatePlayback({
+          state: MusicControl.STATE_PLAYING,
+          elapsedTime: currentTime
+        });
+      }
+    );
     // console.log("PROGRESS", currentTime);
   };
 
   onPlayEnd = () => {};
 
   onLoad = data => {
-    this.setState({
-      streamDuration: data.duration
-    });
+    this.setState(
+      {
+        streamDuration: data.duration
+      },
+      () => {
+        MusicControl.enableControl("seekForward", false);
+        MusicControl.enableControl("seekBackward", false);
+        MusicControl.enableControl("skipForward", false);
+        MusicControl.enableControl("skipBackward", false);
+        MusicControl.enableBackgroundMode(true);
+
+        const { streamChapter } = this.state;
+
+        MusicControl.setNowPlaying({
+          title: `${streamChapter &&
+            streamChapter.activeBook.name_id} ${streamChapter &&
+            streamChapter.activeChapter}`,
+          artist: "Alkitab Suara",
+          duration: this.state.streamDuration,
+          color: 0xfffffff,
+          rating: true
+        });
+
+        MusicControl.on("play", () => {
+          this.setState({ paused: false });
+        });
+        MusicControl.on("pause", () => {
+          this.setState({ paused: true });
+        });
+        MusicControl.on("nextTrack", () => {});
+        MusicControl.on("previousTrack", () => {});
+
+        MusicControl.updatePlayback({
+          state: MusicControl.STATE_PLAYING
+        });
+      }
+    );
   };
 
   onTogglePaused() {
-    this.setState({
-      paused: !this.state.paused
-    });
+    this.setState(
+      {
+        paused: !this.state.paused
+      },
+      () => {
+        if (this.state.paused) {
+          MusicControl.updatePlayback({
+            state: MusicControl.STATE_PAUSED
+          });
+        } else {
+          MusicControl.updatePlayback({
+            state: MusicControl.STATE_PLAYING
+          });
+        }
+      }
+    );
   }
 
   onClosePlayer() {

@@ -135,8 +135,6 @@ android {
 dependencies {
     compile project(':react-native-video')
     compile project(':react-native-music-control')
-    compile project(':react-native-audio-streaming')
-    compile project(':react-native-tts')
     compile project(':react-native-vector-icons')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-fs')
