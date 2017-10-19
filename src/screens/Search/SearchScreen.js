@@ -13,7 +13,7 @@ import {
 const Realm = require("realm");
 import DrawerLayout from "react-native-drawer-layout";
 import LinearGradient from "react-native-linear-gradient";
-import Books from "../constants/Books";
+import Books from "../../constants/Books";
 import Icon from "react-native-vector-icons/Ionicons";
 import Highlighter from "react-native-highlight-words";
 

@@ -20,15 +20,20 @@ import {
 } from "react-native";
 const Realm = require("realm");
 import DrawerLayout from "react-native-drawer-layout";
-import Books from "../constants/Books";
+import Books from "../../constants/Books";
 import GestureRecognizer, {
   swipeDirections
 } from "react-native-swipe-gestures";
 import Icon from "react-native-vector-icons/Ionicons";
 import Video from "react-native-video";
-import MusicControl from "react-native-music-control";
+import { SOUNDCLOUD_CLIENT_ID } from "../../constants/constants";
+import { bookNameHelper } from "../../helpers";
 
-const CLIENT_ID = "<INSERT SOUNDCLOUD KEY HERE>";
+import MusicControl from "react-native-music-control";
+import MediaPlayerControl from "../../components/MediaPlayerControl";
+import SelectedVerseToolBar from "../../components/SelectedVerseToolBar";
+import MainToolBar from "../../components/MainToolBar";
+
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -85,7 +90,7 @@ class PassageScreen extends Component {
                   animated: true
                 });
               }
-            );
+              );
             this.setState({
               selectedVerses: [this.state.activeVerse]
             });
@@ -233,8 +238,8 @@ class PassageScreen extends Component {
                         </Text>
                       </View>
                     ) : (
-                      <Text style={styles.chapterText}>{chapter}</Text>
-                    )}
+                        <Text style={styles.chapterText}>{chapter}</Text>
+                      )}
                   </TouchableOpacity>
                 );
               })}
@@ -334,7 +339,7 @@ class PassageScreen extends Component {
   }
   _onPlayStreaming() {
     const { activeBook, activeChapter } = this.state;
-    const url = `https://api.soundcloud.com/playlists/${activeBook.playlistId}?client_id=${CLIENT_ID}&limit=150&offset=0`;
+    const url = `https://api.soundcloud.com/playlists/${activeBook.playlistId}?client_id=${SOUNDCLOUD_CLIENT_ID}&limit=150&offset=0`;
     console.log(url);
 
     fetch(url)
@@ -345,13 +350,7 @@ class PassageScreen extends Component {
           title: item.title,
           permalink: item.permalink
         }));
-        let bookName = activeBook.name_id
-          .replace(/ /g, "")
-          .replace(/\-/g, "")
-          .toUpperCase();
-        if (bookName == "HAKIMHAKIM") bookName = "HAKIM";
-        if (bookName == "KISAHPARARASUL") bookName = "KISAH PARA RASUL";
-        console.log(bookName);
+        let bookName = bookNameHelper(activeBook.name_id);
         const streamSong = data.filter(item => {
           return (
             item.title.toUpperCase().endsWith(`${bookName}${activeChapter}`) ||
@@ -359,6 +358,7 @@ class PassageScreen extends Component {
           );
         })[0];
         if (streamSong) {
+          console.log("SOOOONG", streamSong)
           LayoutAnimation.easeInEaseOut();
           if (this.state.streamUrl) {
             this.setState(
@@ -370,7 +370,7 @@ class PassageScreen extends Component {
               },
               () => {
                 setTimeout(() => {
-                  const streamUrl = `${streamSong.stream}?client_id=${CLIENT_ID}`;
+                  const streamUrl = `${streamSong.stream}?client_id=${SOUNDCLOUD_CLIENT_ID}`;
                   this.setState({
                     streamUrl,
                     streamChapter: {
@@ -384,7 +384,7 @@ class PassageScreen extends Component {
               }
             );
           } else {
-            const streamUrl = `${streamSong.stream}?client_id=${CLIENT_ID}`;
+            const streamUrl = `${streamSong.stream}?client_id=${SOUNDCLOUD_CLIENT_ID}`;
             this.setState({
               streamUrl,
               streamChapter: {
@@ -447,86 +447,21 @@ class PassageScreen extends Component {
     const { verses, activeBook, activeChapter, selectedVerses } = this.state;
     if (selectedVerses.length) {
       return (
-        <View style={styles.toolbar}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={[styles.actionButton, { marginLeft: 10, flex: 1 }]}
-            onPress={() => this._onBackToolbar()}
-          >
-            <Icon
-              name="ios-arrow-back"
-              size={25}
-              color="#fff"
-              style={{ backgroundColor: "transparent" }}
-            />
-          </TouchableOpacity>
-          <View style={styles.actions}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.actionButton}
-              onPress={() => this._onCopyVerse()}
-            >
-              <Icon
-                name="ios-copy"
-                size={25}
-                color="#fff"
-                style={{ backgroundColor: "transparent" }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.actionButton}
-              onPress={() => this._onShareVerse()}
-            >
-              <Icon
-                name="ios-share-alt"
-                size={25}
-                color="#fff"
-                style={{ backgroundColor: "transparent" }}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <SelectedVerseToolBar
+          _onBackToolbar={() => this._onBackToolbar()}
+          _onCopyVerse={() => this._onCopyVerse()}
+          _onShareVerse={() => this._onShareVerse()}
+        />
       );
     } else {
       return (
-        <View style={styles.toolbar}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.titleButton}
-            onPress={() => this._openDrawer()}
-          >
-            <Text style={styles.toolbarTitle}>
-              {activeBook.name_id} {activeChapter}
-            </Text>
-          </TouchableOpacity>
-          <View style={styles.actions}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.actionButton}
-              onPress={() => this._onShowSearch()}
-            >
-              <Icon
-                name="ios-search"
-                size={25}
-                color="#fff"
-                style={{ backgroundColor: "transparent" }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.actionButton}
-              onPress={() => this._onPlayStreaming()}
-            >
-              <Icon
-                name="ios-headset"
-                size={25}
-                color="#fff"
-                style={{ backgroundColor: "transparent" }}
-              />
-            </TouchableOpacity>
-          </View>
-        </View>
+        <MainToolBar
+          _openDrawer={() => this._openDrawer()}
+          _onShowSearch={()=> this._onShowSearch()}
+          _onPlayStreaming={()=> this._onPlayStreaming()}
+          activeBook={activeBook}
+          activeChapter={activeChapter}
+        />
       );
     }
   }
@@ -550,7 +485,7 @@ class PassageScreen extends Component {
     // console.log("PROGRESS", currentTime);
   };
 
-  onPlayEnd = () => {};
+  onPlayEnd = () => { };
 
   onLoad = data => {
     this.setState(
@@ -568,12 +503,11 @@ class PassageScreen extends Component {
 
         MusicControl.setNowPlaying({
           title: `${streamChapter &&
-            streamChapter.activeBook.name_id} ${streamChapter &&
-            streamChapter.activeChapter}`,
+          streamChapter.activeBook.name_id} ${streamChapter &&
+          streamChapter.activeChapter}`,
           artist: "Alkitab Suara",
           duration: this.state.streamDuration,
-          color: 0xfffffff,
-          rating: true
+          color: 0xfffffff
         });
 
         MusicControl.on("play", () => {
@@ -582,8 +516,8 @@ class PassageScreen extends Component {
         MusicControl.on("pause", () => {
           this.setState({ paused: true });
         });
-        MusicControl.on("nextTrack", () => {});
-        MusicControl.on("previousTrack", () => {});
+        MusicControl.on("nextTrack", () => { });
+        MusicControl.on("previousTrack", () => { });
 
         MusicControl.updatePlayback({
           state: MusicControl.STATE_PLAYING
@@ -632,46 +566,17 @@ class PassageScreen extends Component {
     const progress = streamCurrentTime / streamDuration * 100;
     console.log("PROGRESS", progress);
     return (
-      <View style={[styles.player, { bottom: streamUrl ? 0 : -80 }]}>
-        <View style={styles.row}>
-          {isLoadingSound ? (
-            <View style={styles.playButton}>
-              <ActivityIndicator />
-            </View>
-          ) : (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.playButton}
-              onPress={() => this.onTogglePaused()}
-            >
-              {paused ? (
-                <Icon name="ios-play" size={25} color="#1f364d" />
-              ) : (
-                <Icon name="ios-pause" size={25} color="#1f364d" />
-              )}
-            </TouchableOpacity>
-          )}
-          <Text style={styles.playerText}>
-            {streamChapter && streamChapter.activeBook.name_id}{" "}
-            {streamChapter && streamChapter.activeChapter}
-          </Text>
-          <Image
-            source={require("AlkitabApp/assets/alkitabsuara.png")}
-            style={styles.playerImage}
-            resizeMode={"contain"}
-          />
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.closeButton}
-            onPress={() => this.onClosePlayer()}
-          >
-            <Icon name="ios-close" size={30} color="#fff" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.progressWrapper}>
-          <View style={[styles.progressLine, { width: `${progress}%` }]} />
-        </View>
-      </View>
+      <MediaPlayerControl
+        streamUrl={streamUrl}
+        streamChapter={streamChapter}
+        paused={paused}
+        isLoadingSound={isLoadingSound}
+        streamDuration={streamDuration}
+        streamCurrentTime={streamCurrentTime}
+        progress={progress}
+        onTogglePaused={() => this.onTogglePaused()}
+        onClosePlayer={() => this.onClosePlayer()}
+      />
     );
   }
 
@@ -902,53 +807,6 @@ const styles = StyleSheet.create({
   },
   textSelected: {
     color: "#1f364d"
-  },
-  player: {
-    height: 80,
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "#1f364d",
-    paddingHorizontal: 20,
-    paddingVertical: 15
-  },
-  playButton: {
-    width: 42,
-    height: 42,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 25
-  },
-  closeButton: {
-    width: 42,
-    height: 42,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  playerImage: {
-    width: 70,
-    height: 45
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  playerText: {
-    flex: 1,
-    color: "#fff",
-    paddingHorizontal: 10
-  },
-  progressWrapper: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    height: 4
-  },
-  progressLine: {
-    backgroundColor: "#fff",
-    height: 3
   }
 });
 

@@ -1,8 +1,8 @@
 //@flow
 import React, { Component } from "react";
 import { StyleSheet, View, Platform, StatusBar, Modal } from "react-native";
-import PassageScreen from "./screens/PassageScreen";
-import SearchScreen from "./screens/SearchScreen";
+import PassageScreen from "./screens/Passage/PassageScreen";
+import SearchScreen from "./screens/Search/SearchScreen";
 var RNFS = require("react-native-fs");
 
 class App extends Component {
