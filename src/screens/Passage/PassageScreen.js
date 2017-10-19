@@ -30,6 +30,7 @@ import { SOUNDCLOUD_CLIENT_ID } from "../../constants/constants";
 import { bookNameHelper } from "../../helpers";
 
 import MusicControl from "react-native-music-control";
+import MediaPlayerControl from "../../components/MediaPlayerControl"
 
 
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -355,6 +356,7 @@ class PassageScreen extends Component {
           );
         })[0];
         if (streamSong) {
+          console.log("SOOOONG", streamSong)
           LayoutAnimation.easeInEaseOut();
           if (this.state.streamUrl) {
             this.setState(
@@ -568,8 +570,7 @@ class PassageScreen extends Component {
             streamChapter.activeChapter}`,
           artist: "Alkitab Suara",
           duration: this.state.streamDuration,
-          color: 0xfffffff,
-          rating: true
+          color: 0xfffffff
         });
 
         MusicControl.on("play", () => {
@@ -628,46 +629,17 @@ class PassageScreen extends Component {
     const progress = streamCurrentTime / streamDuration * 100;
     console.log("PROGRESS", progress);
     return (
-      <View style={[styles.player, { bottom: streamUrl ? 0 : -80 }]}>
-        <View style={styles.row}>
-          {isLoadingSound ? (
-            <View style={styles.playButton}>
-              <ActivityIndicator />
-            </View>
-          ) : (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={styles.playButton}
-              onPress={() => this.onTogglePaused()}
-            >
-              {paused ? (
-                <Icon name="ios-play" size={25} color="#1f364d" />
-              ) : (
-                <Icon name="ios-pause" size={25} color="#1f364d" />
-              )}
-            </TouchableOpacity>
-          )}
-          <Text style={styles.playerText}>
-            {streamChapter && streamChapter.activeBook.name_id}{" "}
-            {streamChapter && streamChapter.activeChapter}
-          </Text>
-          <Image
-            source={require("AlkitabApp/assets/alkitabsuara.png")}
-            style={styles.playerImage}
-            resizeMode={"contain"}
-          />
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.closeButton}
-            onPress={() => this.onClosePlayer()}
-          >
-            <Icon name="ios-close" size={30} color="#fff" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.progressWrapper}>
-          <View style={[styles.progressLine, { width: `${progress}%` }]} />
-        </View>
-      </View>
+      <MediaPlayerControl
+        streamUrl = {streamUrl}
+        streamChapter = {streamChapter}
+        paused = {paused}
+        isLoadingSound = {isLoadingSound}
+        streamDuration = {streamDuration}
+        streamCurrentTime = {streamCurrentTime}
+        progress = {progress}
+        onTogglePaused = {()=> this.onTogglePaused()}
+        onClosePlayer = {()=> this.onClosePlayer()}
+      />
     );
   }
 
