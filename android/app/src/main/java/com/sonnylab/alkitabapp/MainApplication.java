@@ -5,8 +5,6 @@ import android.app.Application;
 import com.facebook.react.ReactApplication;
 import com.brentvatne.react.ReactVideoPackage;
 import com.tanguyantoine.react.MusicControl;
-import com.audioStreaming.ReactNativeAudioStreamingPackage;
-import net.no_mad.tts.TextToSpeechPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.rnfs.RNFSPackage;
@@ -33,8 +31,6 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
             new ReactVideoPackage(),
             new MusicControl(),
-            new ReactNativeAudioStreamingPackage(),
-            new TextToSpeechPackage(),
             new VectorIconsPackage(),
             new LinearGradientPackage(),
             new RNFSPackage(),
