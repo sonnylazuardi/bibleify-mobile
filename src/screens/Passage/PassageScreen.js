@@ -870,53 +870,6 @@ const styles = StyleSheet.create({
   },
   textSelected: {
     color: "#1f364d"
-  },
-  player: {
-    height: 80,
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "#1f364d",
-    paddingHorizontal: 20,
-    paddingVertical: 15
-  },
-  playButton: {
-    width: 42,
-    height: 42,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    borderRadius: 25
-  },
-  closeButton: {
-    width: 42,
-    height: 42,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  playerImage: {
-    width: 70,
-    height: 45
-  },
-  row: {
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  playerText: {
-    flex: 1,
-    color: "#fff",
-    paddingHorizontal: 10
-  },
-  progressWrapper: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    height: 4
-  },
-  progressLine: {
-    backgroundColor: "#fff",
-    height: 3
   }
 });  
 
