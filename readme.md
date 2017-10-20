@@ -35,6 +35,13 @@ All the sound are take from http://alkitabsuara.com
 - [ ] add bookmark
 - [ ] desktop app - electron
 
+### Instruction
+- copy and rename `src/config/local.example.js` to `src/config/local.js`
+- put your soundcloud client id 
+- run `npm install` to install all dependency
+- run `react-native start` or `npm start`
+- run `react-native run-android` or `react-native run-ios` to run the app on your device or emulator
+
 ## Tech Stacks
 
 - React Native
@@ -43,3 +50,4 @@ All the sound are take from http://alkitabsuara.com
 ## License
 
 MIT Licensed @sonnylazuardi
+
