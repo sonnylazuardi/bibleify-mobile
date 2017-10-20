@@ -33,6 +33,7 @@ import MusicControl from "react-native-music-control";
 import MediaPlayerControl from "../../components/MediaPlayerControl";
 import SelectedVerseToolBar from "../../components/SelectedVerseToolBar";
 import MainToolBar from "../../components/MainToolBar";
+import DrawerMenu from "../../components/DrawerMenu";
 
 
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -70,6 +71,7 @@ class PassageScreen extends Component {
     streamDuration: 0,
     streamCurrentTime: 0
   };
+
   componentDidUpdate(prevProps, prevState) {
     if (
       this.state.activeBook != prevState.activeBook ||
@@ -99,6 +101,7 @@ class PassageScreen extends Component {
       });
     }
   }
+
   loadPassage(callback) {
     Realm.open({ schema: [PassageSchema], readOnly: true }).then(realm => {
       const { activeBook, activeChapter, activeVerse } = this.state;
@@ -120,6 +123,7 @@ class PassageScreen extends Component {
       }
     });
   }
+
   componentWillReceiveProps(nextProps) {
     const { jumpPassage } = nextProps;
     if (this.props.jumpPassage != jumpPassage && jumpPassage) {
@@ -135,6 +139,7 @@ class PassageScreen extends Component {
       }
     }
   }
+
   componentDidMount() {
     BackHandler.addEventListener("hardwareBackPress", () => {
       if (this.state.selectedVerses.length) {
@@ -149,12 +154,15 @@ class PassageScreen extends Component {
       this.loadPassage();
     }, 100);
   }
+
   _changeActiveBook(book) {
     this.setState({
       activeBook: book
     });
   }
+
   _changeActiveChapter(chapter) {
+    console.log("aaaA", chapter)
     this.setState(
       {
         activeChapter: chapter
@@ -164,6 +172,7 @@ class PassageScreen extends Component {
       }
     );
   }
+
   _onSwipeLeft(gestureState) {
     console.log(gestureState);
     if (Math.abs(gestureState.dx) > 90) {
@@ -179,6 +188,7 @@ class PassageScreen extends Component {
       }
     }
   }
+
   _onSwipeRight(gestureState) {
     console.log(gestureState);
     if (Math.abs(gestureState.dx) > 90) {
@@ -194,66 +204,11 @@ class PassageScreen extends Component {
       }
     }
   }
-  _renderBook(book, i) {
-    const { activeBook, activeChapter } = this.state;
-    const isBookActive = activeBook.value == book.value;
-    const bookButtonView = (
-      <TouchableOpacity
-        activeOpacity={0.7}
-        style={[styles.book, isBookActive ? styles.bookActive : null]}
-        key={`${book.value}-${i}`}
-        onPress={() => this._changeActiveBook(book)}
-      >
-        <Text style={styles.bookText}>{book.name_id}</Text>
-      </TouchableOpacity>
-    );
-    if (isBookActive) {
-      let chapters = [];
-      for (var i = 1; i <= book.total; i++) {
-        chapters.push(i);
-      }
-      return (
-        <View key={`${book.value}-${i}`}>
-          {bookButtonView}
-          <View style={styles.chapterSelector}>
-            <ScrollView
-              horizontal={true}
-              contentContainerStyle={styles.chapterScroll}
-            >
-              {chapters.map(chapter => {
-                const isChapterActive = chapter == activeChapter;
-                return (
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    key={`${book.value}-${chapter}`}
-                    style={styles.chapter}
-                    onPress={() => this._changeActiveChapter(chapter)}
-                  >
-                    {isChapterActive ? (
-                      <View style={styles.chapterActive}>
-                        <Text
-                          style={[styles.chapterText, styles.chapterTextActive]}
-                        >
-                          {chapter}
-                        </Text>
-                      </View>
-                    ) : (
-                        <Text style={styles.chapterText}>{chapter}</Text>
-                      )}
-                  </TouchableOpacity>
-                );
-              })}
-            </ScrollView>
-          </View>
-        </View>
-      );
-    } else {
-      return bookButtonView;
-    }
-  }
+
   _onJumpText(jumpText) {
     this.setState({ jumpText });
   }
+
   _onSubmitJump() {
     let jumpText = this.state.jumpText;
     if (jumpText.indexOf(" ") != -1) {
@@ -280,63 +235,36 @@ class PassageScreen extends Component {
       }
     }
   }
+
   _onClearJump() {
     this.setState({
       jumpText: ""
     });
   }
+
   _renderDrawer() {
-    const { jumpText } = this.state;
+    const { jumpText, activeBook, activeChapter } = this.state;
     return (
-      <View style={styles.drawerWrapper}>
-        <View style={styles.drawerHeader}>
-          <TouchableOpacity activeOpacity={0.7} style={styles.drawerVersion}>
-            <Text style={styles.versionText}>Terjemahan Baru</Text>
-            <Icon name="ios-book" size={25} color="#fff" />
-          </TouchableOpacity>
-          <TextInput
-            placeholder={"Jump here"}
-            placeholderTextColor={"rgba(255,255,255,0.3)"}
-            value={jumpText}
-            style={styles.input}
-            onSubmitEditing={() => this._onSubmitJump()}
-            onChangeText={jumpText => this._onJumpText(jumpText)}
-          />
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.clearJump}
-            onPress={() => this._onClearJump()}
-          >
-            <Icon name="ios-close" size={30} color="#fff" />
-          </TouchableOpacity>
-        </View>
-        <ScrollView>
-          <Text style={styles.separator}>OLD TESTAMENT</Text>
-          {Books.filter(
-            book =>
-              book.type == "old" &&
-              book.name_id.toLowerCase().indexOf(jumpText.toLowerCase()) != -1
-          ).map((book, i) => {
-            return this._renderBook(book, i);
-          })}
-          <Text style={styles.separator}>NEW TESTAMENT</Text>
-          {Books.filter(
-            book =>
-              book.type == "new" &&
-              book.name_id.toLowerCase().indexOf(jumpText.toLowerCase()) != -1
-          ).map((book, i) => {
-            return this._renderBook(book, i);
-          })}
-        </ScrollView>
-      </View>
+      <DrawerMenu
+        jumpText={jumpText}
+        _onSubmitJump={()=>this._onSubmitJump()} 
+        _onJumpText={(jumpText)=>this._onJumpText(jumpText)}
+        _onClearJump={()=>this._onClearJump()}
+        _changeActiveBook={(book)=>this._changeActiveBook(book)}
+        _changeActiveChapter={(chapter)=>this._changeActiveChapter(chapter)}
+        activeBook={activeBook}
+        activeChapter={activeChapter}/>
     );
   }
+
   _openDrawer() {
     this._drawer.openDrawer();
   }
+
   _onShowSearch() {
     this.props.onShowSearch && this.props.onShowSearch();
   }
+
   _onPlayStreaming() {
     const { activeBook, activeChapter } = this.state;
     const url = `https://api.soundcloud.com/playlists/${activeBook.playlistId}?client_id=${SOUNDCLOUD_CLIENT_ID}&limit=150&offset=0`;
@@ -398,6 +326,7 @@ class PassageScreen extends Component {
         }
       });
   }
+
   _onSelectVerse(verse) {
     const { selectedVerses } = this.state;
     if (selectedVerses.indexOf(verse) != -1) {
@@ -410,11 +339,13 @@ class PassageScreen extends Component {
       });
     }
   }
+
   _onBackToolbar() {
     this.setState({
       selectedVerses: []
     });
   }
+
   _onCopyVerse() {
     const { selectedVerses, verses } = this.state;
 
@@ -428,6 +359,7 @@ class PassageScreen extends Component {
       selectedVerses: []
     });
   }
+
   _onShareVerse() {
     const { selectedVerses, verses } = this.state;
 
@@ -443,6 +375,7 @@ class PassageScreen extends Component {
       url: ""
     });
   }
+
   _renderToolbar() {
     const { verses, activeBook, activeChapter, selectedVerses } = this.state;
     if (selectedVerses.length) {
@@ -457,14 +390,15 @@ class PassageScreen extends Component {
       return (
         <MainToolBar
           _openDrawer={() => this._openDrawer()}
-          _onShowSearch={()=> this._onShowSearch()}
-          _onPlayStreaming={()=> this._onPlayStreaming()}
+          _onShowSearch={() => this._onShowSearch()}
+          _onPlayStreaming={() => this._onPlayStreaming()}
           activeBook={activeBook}
           activeChapter={activeChapter}
         />
       );
     }
   }
+  
   onPlayProgress = ({ currentTime }) => {
     if (currentTime > 0 && this.state.isLoadingSound) {
       this.setState({
@@ -704,11 +638,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#0D233A"
   },
-  drawerWrapper: {
-    backgroundColor: "#1f364d",
-    flex: 1,
-    paddingTop: 20
-  },
   text: {
     color: "#fff",
     lineHeight: 30,
@@ -717,90 +646,11 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "900"
   },
-  separator: {
-    fontWeight: "900",
-    color: "rgba(255,255,255,0.4)",
-    fontSize: 10,
-    marginVertical: 10,
-    marginLeft: 20
-  },
-  book: {
-    paddingHorizontal: 25,
-    paddingVertical: 20
-  },
-  bookText: {
-    color: "#fff",
-    fontWeight: "300"
-  },
-  bookActive: {
-    backgroundColor: "#26405A"
-  },
-  chapterSelector: {
-    height: 60,
-    backgroundColor: "#26405A"
-  },
-  chapter: {
-    height: 60,
-    width: 60,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  chapterText: {
-    color: "#fff"
-  },
-  chapterActive: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  chapterTextActive: {
-    color: "#0D233A"
-  },
-  chapterScroll: {
-    paddingHorizontal: 20
-  },
   verseNumber: {
     fontWeight: "900",
     paddingRight: 20,
     color: "#26405A",
     fontSize: 10
-  },
-  drawerHeader: {
-    height: 100
-  },
-  drawerVersion: {
-    flexDirection: "row",
-    height: 25,
-    alignItems: "center",
-    paddingHorizontal: 20,
-    flex: 1
-  },
-  versionText: {
-    color: "#fff",
-    flex: 1
-  },
-  input: {
-    flex: 1,
-    height: 20,
-    backgroundColor: "#26405A",
-    margin: 5,
-    marginBottom: 10,
-    marginHorizontal: 10,
-    borderRadius: 7,
-    paddingHorizontal: 10,
-    color: "#fff",
-    fontSize: 13
-  },
-  clearJump: {
-    position: "absolute",
-    right: 10,
-    top: 55,
-    height: 30,
-    width: 30,
-    backgroundColor: "transparent"
   },
   selectedVerse: {
     backgroundColor: "#fff"
