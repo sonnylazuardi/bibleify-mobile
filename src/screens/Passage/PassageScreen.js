@@ -6,14 +6,9 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Platform,
-  TextInput,
-  Image,
   Clipboard,
   Share,
-  NativeModules,
   findNodeHandle,
-  ActivityIndicator,
   LayoutAnimation,
   UIManager,
   BackHandler
@@ -21,12 +16,9 @@ import {
 const Realm = require("realm");
 import DrawerLayout from "react-native-drawer-layout";
 import Books from "../../constants/Books";
-import GestureRecognizer, {
-  swipeDirections
-} from "react-native-swipe-gestures";
-import Icon from "react-native-vector-icons/Ionicons";
+import GestureRecognizer from "react-native-swipe-gestures";
 import Video from "react-native-video";
-import { SOUNDCLOUD_CLIENT_ID } from "../../constants/constants";
+import { SOUNDCLOUD_CLIENT_ID, PASSAGE_SCHEMA, COLOR } from "../../constants/constants";
 import { bookNameHelper } from "../../helpers";
 
 import MusicControl from "react-native-music-control";
@@ -35,24 +27,10 @@ import SelectedVerseToolBar from "../../components/SelectedVerseToolBar";
 import MainToolBar from "../../components/MainToolBar";
 import DrawerMenu from "../../components/DrawerMenu";
 
+const fontSizeDefault = 16;
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
-
-const RCTUIManager = require("NativeModules").UIManager;
-
-const PassageSchema = {
-  name: "Passage",
-  primaryKey: "id",
-  properties: {
-    id: "string",
-    content: "string",
-    book: "string",
-    chapter: "int",
-    verse: "int",
-    type: "string"
-  }
-};
 
 class PassageScreen extends Component {
   _drawer;
@@ -69,7 +47,9 @@ class PassageScreen extends Component {
     isLoadingSound: true,
     paused: false,
     streamDuration: 0,
-    streamCurrentTime: 0
+    streamCurrentTime: 0,
+    playerHeight: 0,
+    fontSize: fontSizeDefault
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -103,8 +83,8 @@ class PassageScreen extends Component {
   }
 
   loadPassage(callback) {
-    Realm.open({ schema: [PassageSchema], readOnly: true }).then(realm => {
-      const { activeBook, activeChapter, activeVerse } = this.state;
+    Realm.open({ schema: [PASSAGE_SCHEMA], readOnly: true }).then(realm => {
+      const { activeBook, activeChapter } = this.state;
       let passages = realm.objects("Passage");
       let filteredPassages = passages.filtered(
         `book = "${activeBook.value}" AND chapter = "${activeChapter}"`
@@ -162,7 +142,6 @@ class PassageScreen extends Component {
   }
 
   _changeActiveChapter(chapter) {
-    console.log("aaaA", chapter)
     this.setState(
       {
         activeChapter: chapter
@@ -174,7 +153,6 @@ class PassageScreen extends Component {
   }
 
   _onSwipeLeft(gestureState) {
-    console.log(gestureState);
     if (Math.abs(gestureState.dx) > 90) {
       const nextChapter = this.state.activeChapter + 1;
       if (nextChapter <= this.state.activeBook.total) {
@@ -190,7 +168,6 @@ class PassageScreen extends Component {
   }
 
   _onSwipeRight(gestureState) {
-    console.log(gestureState);
     if (Math.abs(gestureState.dx) > 90) {
       const prevChapter = this.state.activeChapter - 1;
       if (prevChapter > 0) {
@@ -242,18 +219,24 @@ class PassageScreen extends Component {
     });
   }
 
+  onFontValueChange(value) {
+    console.log(value)
+    this.setState({ fontSize: fontSizeDefault + value })
+  }
+
   _renderDrawer() {
     const { jumpText, activeBook, activeChapter } = this.state;
     return (
       <DrawerMenu
         jumpText={jumpText}
-        _onSubmitJump={()=>this._onSubmitJump()} 
-        _onJumpText={(jumpText)=>this._onJumpText(jumpText)}
-        _onClearJump={()=>this._onClearJump()}
-        _changeActiveBook={(book)=>this._changeActiveBook(book)}
-        _changeActiveChapter={(chapter)=>this._changeActiveChapter(chapter)}
+        _onSubmitJump={() => this._onSubmitJump()}
+        _onJumpText={(jumpText) => this._onJumpText(jumpText)}
+        _onClearJump={() => this._onClearJump()}
+        _changeActiveBook={(book) => this._changeActiveBook(book)}
+        _changeActiveChapter={(chapter) => this._changeActiveChapter(chapter)}
         activeBook={activeBook}
-        activeChapter={activeChapter}/>
+        activeChapter={activeChapter}
+        onFontValueChange={(value) => this.onFontValueChange(value)} />
     );
   }
 
@@ -268,7 +251,6 @@ class PassageScreen extends Component {
   _onPlayStreaming() {
     const { activeBook, activeChapter } = this.state;
     const url = `https://api.soundcloud.com/playlists/${activeBook.playlistId}?client_id=${SOUNDCLOUD_CLIENT_ID}&limit=150&offset=0`;
-    console.log(url);
 
     fetch(url)
       .then(res => res.json())
@@ -286,7 +268,6 @@ class PassageScreen extends Component {
           );
         })[0];
         if (streamSong) {
-          console.log("SOOOONG", streamSong)
           LayoutAnimation.easeInEaseOut();
           if (this.state.streamUrl) {
             this.setState(
@@ -307,7 +288,6 @@ class PassageScreen extends Component {
                     },
                     isLoadingSound: true
                   });
-                  console.log("PLAYING", streamUrl);
                 }, 1000);
               }
             );
@@ -321,7 +301,6 @@ class PassageScreen extends Component {
               },
               isLoadingSound: true
             });
-            console.log("PLAYING", streamUrl);
           }
         }
       });
@@ -377,7 +356,7 @@ class PassageScreen extends Component {
   }
 
   _renderToolbar() {
-    const { verses, activeBook, activeChapter, selectedVerses } = this.state;
+    const { activeBook, activeChapter, selectedVerses } = this.state;
     if (selectedVerses.length) {
       return (
         <SelectedVerseToolBar
@@ -398,7 +377,7 @@ class PassageScreen extends Component {
       );
     }
   }
-  
+
   onPlayProgress = ({ currentTime }) => {
     if (currentTime > 0 && this.state.isLoadingSound) {
       this.setState({
@@ -437,8 +416,8 @@ class PassageScreen extends Component {
 
         MusicControl.setNowPlaying({
           title: `${streamChapter &&
-          streamChapter.activeBook.name_id} ${streamChapter &&
-          streamChapter.activeChapter}`,
+            streamChapter.activeBook.name_id} ${streamChapter &&
+            streamChapter.activeChapter}`,
           artist: "Alkitab Suara",
           duration: this.state.streamDuration,
           color: 0xfffffff
@@ -487,6 +466,12 @@ class PassageScreen extends Component {
     });
   }
 
+  onGetPlayerHeight(height) {
+    this.setState({
+      playerHeight: height
+    })
+  }
+
   _renderPlayer() {
     const {
       streamUrl,
@@ -496,11 +481,10 @@ class PassageScreen extends Component {
       streamDuration,
       streamCurrentTime
     } = this.state;
-    console.log("current", streamCurrentTime, "duration", streamDuration);
     const progress = streamCurrentTime / streamDuration * 100;
-    console.log("PROGRESS", progress);
     return (
       <MediaPlayerControl
+        mediaPlayerHeight={(height) => { this.onGetPlayerHeight(height) }}
         streamUrl={streamUrl}
         streamChapter={streamChapter}
         paused={paused}
@@ -517,12 +501,10 @@ class PassageScreen extends Component {
   render() {
     const {
       verses,
-      activeBook,
-      activeChapter,
       streamUrl,
-      streamChapter,
       paused,
-      isLoadingSound
+      playerHeight,
+      fontSize
     } = this.state;
     const swipeConfig = {
       velocityThreshold: 0.3,
@@ -539,10 +521,9 @@ class PassageScreen extends Component {
       >
         {this._renderToolbar()}
         <ScrollView
-          style={styles.container}
+          style={[styles.container, streamUrl ? { marginBottom: playerHeight } : { marginBottom: 0 }]}
           contentContainerStyle={[
-            styles.innerScroll,
-            streamUrl ? { paddingBottom: 100 } : { paddingBottom: 20 }
+            styles.innerScroll
           ]}
           ref={scrollView => (this._scrollView = scrollView)}
         >
@@ -569,11 +550,12 @@ class PassageScreen extends Component {
                       style={[
                         styles.text,
                         isTitle ? styles.title : null,
-                        isSelected ? styles.textSelected : null
+                        isSelected ? styles.textSelected : null,
+                        { fontSize }
                       ]}
                     >
                       {!isTitle ? (
-                        <Text style={styles.verseNumber}>{verse.verse} </Text>
+                        <Text style={[styles.verseNumber, { fontSize }]}>{verse.verse} </Text>
                       ) : null}
                       {verse.content}
                     </Text>
@@ -606,40 +588,15 @@ class PassageScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-  toolbar: {
-    paddingTop: Platform.OS == "ios" ? 20 : 0,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#1f364d",
-    height: Platform.OS == "ios" ? 80 : 60
-  },
-  titleButton: {
-    flex: 1,
-    paddingHorizontal: 25
-  },
-  toolbarTitle: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "300",
-    backgroundColor: "transparent"
-  },
   innerScroll: {
     paddingVertical: 15
   },
-  actions: {
-    flexDirection: "row",
-    marginRight: 10
-  },
-  actionButton: {
-    paddingHorizontal: 20
-  },
-  icon: {},
   container: {
     flex: 1,
-    backgroundColor: "#0D233A"
+    backgroundColor: COLOR.primaryExtraDark
   },
   text: {
-    color: "#fff",
+    color: COLOR.mainTextColor,
     lineHeight: 30,
     paddingHorizontal: 25
   },
@@ -649,14 +606,13 @@ const styles = StyleSheet.create({
   verseNumber: {
     fontWeight: "900",
     paddingRight: 20,
-    color: "#26405A",
-    fontSize: 10
+    color: COLOR.primaryDark
   },
   selectedVerse: {
-    backgroundColor: "#fff"
+    backgroundColor: COLOR.mainTextColor
   },
   textSelected: {
-    color: "#1f364d"
+    color: COLOR.primary
   }
 });
 
