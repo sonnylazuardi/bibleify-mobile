@@ -7,18 +7,36 @@ import {
     Image,
     TouchableOpacity
 } from "react-native";
+import Slider from 'react-native-slider';
 import Icon from "react-native-vector-icons/Ionicons";
 
+/* <View style={[styles.progressLine, { width: `${progress}%` }]} /> */
 
 export default class MediaPlayerControl extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            height: 0,
+            sliderHeight: 0
         };
     }
 
+    measureView = (event) => {
+        const height = event.nativeEvent.layout.height;
+        this.props.mediaPlayerHeight(height)
+        this.setState({
+            height
+        })
+    }
+
+    measureSlider = (event) => {
+        this.setState({
+            sliderHeight: event.nativeEvent.layout.height
+        })
+    }
+
     render() {
-        console.log("MEDIA CONTROLL", this.props);
+        // console.log("MEDIA CONTROLL", this.props);
         const {
             streamUrl,
             streamChapter,
@@ -28,8 +46,22 @@ export default class MediaPlayerControl extends Component {
             streamCurrentTime,
             progress
           } = this.props;
+        const { height } = this.state;
         return (
-            <View style={[styles.player, { bottom: streamUrl ? 0 : -80 }]}>
+            <View
+                style={[styles.player, { bottom: streamUrl ? 0 : -height }]}
+                onLayout={(event) => this.measureView(event)}>
+                <View style={styles.progressWrapper}>
+                    <Slider
+                        maximumValue={100}
+                        value={progress ? progress : 0}
+                        thumbTintColor='#fff'
+                        minimumTrackTintColor='#1fb28a'
+                        maximumTrackTintColor='#d3d3d3'
+                        style={styles.progressLine}
+                        onLayout={(event) => this.measureSlider(event)}
+                    />
+                </View>
                 <View style={styles.row}>
                     {isLoadingSound ? (
                         <View style={styles.playButton}>
@@ -65,9 +97,6 @@ export default class MediaPlayerControl extends Component {
                         <Icon name="ios-close" size={30} color="#fff" />
                     </TouchableOpacity>
                 </View>
-                <View style={styles.progressWrapper}>
-                    <View style={[styles.progressLine, { width: `${progress}%` }]} />
-                </View>
             </View>
         );
     }
@@ -75,14 +104,14 @@ export default class MediaPlayerControl extends Component {
 
 const styles = StyleSheet.create({
     player: {
-        height: 80,
+        flexDirection: 'column',
         position: "absolute",
         bottom: 0,
         left: 0,
         right: 0,
         backgroundColor: "#1f364d",
         paddingHorizontal: 20,
-        paddingVertical: 15
+        paddingBottom: 15
     },
     playButton: {
         width: 42,
@@ -112,13 +141,9 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     progressWrapper: {
-        position: "absolute",
-        left: 0,
-        right: 0,
-        height: 4
+        width: '100%'
     },
     progressLine: {
-        backgroundColor: "#fff",
-        height: 3
+        backgroundColor: "transparent"
     }
 });
