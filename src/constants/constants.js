@@ -13,6 +13,10 @@ export const COLOR = {
    primaryExtraDark: '#0D233A'
 }
 
+export const SETTING_IDS = {
+    fontSize: '1'
+}
+
 export const SUBMENU = [
     {
         title: 'SETTINGS',
