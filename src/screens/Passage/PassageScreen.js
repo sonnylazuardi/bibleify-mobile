@@ -13,21 +13,24 @@ import {
   UIManager,
   BackHandler
 } from "react-native";
-const Realm = require("realm");
 import DrawerLayout from "react-native-drawer-layout";
-import Books from "../../constants/Books";
 import GestureRecognizer from "react-native-swipe-gestures";
-import Video from "react-native-video";
-import { SOUNDCLOUD_CLIENT_ID, PASSAGE_SCHEMA, COLOR } from "../../constants/constants";
-import { bookNameHelper } from "../../helpers";
-
 import MusicControl from "react-native-music-control";
+import Video from "react-native-video";
+
+// components
 import MediaPlayerControl from "../../components/MediaPlayerControl";
 import SelectedVerseToolBar from "../../components/SelectedVerseToolBar";
 import MainToolBar from "../../components/MainToolBar";
 import DrawerMenu from "../../components/DrawerMenu";
 
+import Books from "../../constants/Books";
+import { SOUNDCLOUD_CLIENT_ID, SETTING_IDS, COLOR } from "../../constants/constants";
+import { bookNameHelper } from "../../helpers";
+import { queries } from '../../data/queries/Queries';
+
 const fontSizeDefault = 16;
+const { getPassage, updateSetting } = queries;
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -82,28 +85,6 @@ class PassageScreen extends Component {
     }
   }
 
-  loadPassage(callback) {
-    Realm.open({ schema: [PASSAGE_SCHEMA], readOnly: true }).then(realm => {
-      const { activeBook, activeChapter } = this.state;
-      let passages = realm.objects("Passage");
-      let filteredPassages = passages.filtered(
-        `book = "${activeBook.value}" AND chapter = "${activeChapter}"`
-      );
-      const versesRaw = Object.keys(filteredPassages);
-      if (versesRaw.length) {
-        const verses = versesRaw.map(key => filteredPassages[key]);
-        this.setState(
-          {
-            verses: verses
-          },
-          () => {
-            callback && callback();
-          }
-        );
-      }
-    });
-  }
-
   componentWillReceiveProps(nextProps) {
     const { jumpPassage } = nextProps;
     if (this.props.jumpPassage != jumpPassage && jumpPassage) {
@@ -135,10 +116,14 @@ class PassageScreen extends Component {
     }, 100);
   }
 
+  loadPassage() {
+    const { activeBook, activeChapter } = this.state;
+    const verses = getPassage(activeBook, activeChapter);
+    this.setState({verses})
+  }
+
   _changeActiveBook(book) {
-    this.setState({
-      activeBook: book
-    });
+    this.setState({activeBook: book});
   }
 
   _changeActiveChapter(chapter) {
@@ -219,8 +204,8 @@ class PassageScreen extends Component {
     });
   }
 
-  onFontValueChange(value) {
-    console.log(value)
+  onFontSizeChanged(value) {
+    updateSetting({ id: SETTING_IDS.fontSize, value: value.toString(), name: 'font_size' })
     this.setState({ fontSize: fontSizeDefault + value })
   }
 
@@ -236,7 +221,7 @@ class PassageScreen extends Component {
         _changeActiveChapter={(chapter) => this._changeActiveChapter(chapter)}
         activeBook={activeBook}
         activeChapter={activeChapter}
-        onFontValueChange={(value) => this.onFontValueChange(value)} />
+        onFontSizeChanged={(value) => this.onFontSizeChanged(value)} />
     );
   }
 

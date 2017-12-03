@@ -52,7 +52,7 @@ export default class DrawerMenu extends Component {
 
     _renderSettingSection = () => {
         const { fontValue } = this.props || 0;
-        const { onFontValueChange } = this.props || {};
+        const { onFontSizeChanged } = this.props || {};
         return (
             <View>
                 <ScrollView style={styles.verticalContainer}>
@@ -66,7 +66,7 @@ export default class DrawerMenu extends Component {
                         thumbTintColor='#fff'
                         minimumTrackTintColor='#1fb28a'
                         maximumTrackTintColor='#d3d3d3'
-                        onValueChange={(value) => { onFontValueChange(value) }}
+                        onValueChange={(value) => { onFontSizeChanged(value) }}
                     />
                 </ScrollView>
             </View>
