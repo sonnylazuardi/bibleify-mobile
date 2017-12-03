@@ -10,7 +10,8 @@ export const COLOR = {
    darkOverlay: "rgba(0,0,0,0.3)",
    primary: '#1f364d',
    primaryDark: '#26405A',
-   primaryExtraDark: '#0D233A'
+   primaryExtraDark: '#0D233A',
+   white: 'white'
 }
 
 export const SETTING_IDS = {
@@ -24,16 +25,3 @@ export const SUBMENU = [
         description: 'Set your font size'
     }
 ];
-
-export const PASSAGE_SCHEMA = {
-    name: "Passage",
-    primaryKey: "id",
-    properties: {
-      id: "string",
-      content: "string",
-      book: "string",
-      chapter: "int",
-      verse: "int",
-      type: "string"
-    }
-  };

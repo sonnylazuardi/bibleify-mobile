@@ -469,7 +469,7 @@ class PassageScreen extends Component {
     const progress = streamCurrentTime / streamDuration * 100;
     return (
       <MediaPlayerControl
-        mediaPlayerHeight={(height) => { this.onGetPlayerHeight(height) }}
+        setMediaPlayerHeight={(height) => { this.onGetPlayerHeight(height) }}
         streamUrl={streamUrl}
         streamChapter={streamChapter}
         paused={paused}

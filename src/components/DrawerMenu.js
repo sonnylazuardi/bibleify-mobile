@@ -156,7 +156,7 @@ export default class DrawerMenu extends Component {
                             <Icon name="ios-close" size={30} color={COLOR.mainTextColor} />
                         </TouchableOpacity>
                     </View>
-                    <View style={{ padding: 16 }}>
+                    <View style={styles.padding}>
                         <Accordion
                             onChange={(index) => this._toggleSetting(index)}
                             sections={SUBMENU}
@@ -288,7 +288,8 @@ const styles = StyleSheet.create({
         height: 30,
         width: 30,
         backgroundColor: COLOR.clearBackground
-    }
+    },
+    padding: { padding: 16 }
 });
 
 DrawerMenu.propTypes = {
