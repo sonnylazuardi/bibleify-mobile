@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import Slider from 'react-native-slider';
 import Icon from "react-native-vector-icons/Ionicons";
+import PropTypes from 'prop-types';
+import { COLOR } from '../constants/constants';
 
 /* <View style={[styles.progressLine, { width: `${progress}%` }]} /> */
 
@@ -23,7 +25,7 @@ export default class MediaPlayerControl extends Component {
 
     measureView = (event) => {
         const height = event.nativeEvent.layout.height;
-        this.props.mediaPlayerHeight(height)
+        this.props.setMediaPlayerHeight(height)
         this.setState({
             height
         })
@@ -36,7 +38,6 @@ export default class MediaPlayerControl extends Component {
     }
 
     render() {
-        // console.log("MEDIA CONTROLL", this.props);
         const {
             streamUrl,
             streamChapter,
@@ -44,7 +45,9 @@ export default class MediaPlayerControl extends Component {
             isLoadingSound,
             streamDuration,
             streamCurrentTime,
-            progress
+            progress,
+            onClosePlayer,
+            onTogglePaused
           } = this.props;
         const { height } = this.state;
         return (
@@ -71,7 +74,7 @@ export default class MediaPlayerControl extends Component {
                             <TouchableOpacity
                                 activeOpacity={0.7}
                                 style={styles.playButton}
-                                onPress={() => this.props.onTogglePaused()}
+                                onPress={() => onTogglePaused()}
                             >
                                 {paused ? (
                                     <Icon name="ios-play" size={25} color="#1f364d" />
@@ -92,7 +95,7 @@ export default class MediaPlayerControl extends Component {
                     <TouchableOpacity
                         activeOpacity={0.7}
                         style={styles.closeButton}
-                        onPress={() => this.props.onClosePlayer()}
+                        onPress={() => onClosePlayer()}
                     >
                         <Icon name="ios-close" size={30} color="#fff" />
                     </TouchableOpacity>
@@ -109,7 +112,7 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: "#1f364d",
+        backgroundColor: COLOR.primary,
         paddingHorizontal: 20,
         paddingBottom: 15
     },
@@ -118,7 +121,7 @@ const styles = StyleSheet.create({
         height: 42,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#fff",
+        backgroundColor: COLOR.white,
         borderRadius: 25
     },
     closeButton: {
@@ -137,13 +140,26 @@ const styles = StyleSheet.create({
     },
     playerText: {
         flex: 1,
-        color: "#fff",
+        color: COLOR.white,
         paddingHorizontal: 10
     },
     progressWrapper: {
         width: '100%'
     },
     progressLine: {
-        backgroundColor: "transparent"
+        backgroundColor: COLOR.clearBackground
     }
 });
+
+MediaPlayerControl.propTypes = {
+    setMediaPlayerHeight: PropTypes.func.isRequired,
+    streamUrl: PropTypes.string,
+    streamChapter: PropTypes.string,
+    paused: PropTypes.bool.isRequired,
+    isLoadingSound: PropTypes.bool.isRequired,
+    streamDuration: PropTypes.number.isRequired,
+    streamCurrentTime: PropTypes.number.isRequired,
+    progress: PropTypes.number.isRequired,
+    onClosePlayer: PropTypes.func.isRequired,
+    onTogglePaused: PropTypes.func.isRequired
+}

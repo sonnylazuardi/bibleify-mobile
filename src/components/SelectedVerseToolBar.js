@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import {
     View,
     StyleSheet,
-    Text,
     TouchableOpacity,
     Platform
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
+import PropTypes from 'prop-types';
+import { COLOR } from '../constants/constants';
 
 
 export default class SelectedVerseToolBar extends Component {
@@ -17,43 +18,41 @@ export default class SelectedVerseToolBar extends Component {
     }
 
     render() {
+        const { _onBackToolbar, _onCopyVerse, _onShareVerse } = this.props
         return (
             <View style={styles.toolbar}>
                 <TouchableOpacity
                     activeOpacity={0.7}
-                    style={[styles.actionButton, { marginLeft: 10, flex: 1 }]}
-                    onPress={() => this.props._onBackToolbar()}
+                    style={styles.backButton}
+                    onPress={() => _onBackToolbar()}
                 >
                     <Icon
                         name="ios-arrow-back"
                         size={25}
                         color="#fff"
-                        style={{ backgroundColor: "transparent" }}
                     />
                 </TouchableOpacity>
                 <View style={styles.actions}>
                     <TouchableOpacity
                         activeOpacity={0.7}
                         style={styles.actionButton}
-                        onPress={() => this.props._onCopyVerse()}
+                        onPress={() => _onCopyVerse()}
                     >
                         <Icon
                             name="ios-copy"
                             size={25}
                             color="#fff"
-                            style={{ backgroundColor: "transparent" }}
                         />
                     </TouchableOpacity>
                     <TouchableOpacity
                         activeOpacity={0.7}
                         style={styles.actionButton}
-                        onPress={() => this.props._onShareVerse()}
+                        onPress={() => _onShareVerse()}
                     >
                         <Icon
                             name="ios-share-alt"
                             size={25}
                             color="#fff"
-                            style={{ backgroundColor: "transparent" }}
                         />
                     </TouchableOpacity>
                 </View>
@@ -67,8 +66,13 @@ const styles = StyleSheet.create({
         paddingTop: Platform.OS == "ios" ? 20 : 0,
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: "#1f364d",
+        backgroundColor: COLOR.primary,
         height: Platform.OS == "ios" ? 80 : 60
+    },
+    backButton: {
+        marginLeft: 10,
+        paddingHorizontal: 20,
+        flex: 1
     },
     actions: {
         flexDirection: "row",
@@ -77,4 +81,10 @@ const styles = StyleSheet.create({
     actionButton: {
         paddingHorizontal: 20
     }
-});  
+});
+
+SelectedVerseToolBar.propTypes = {
+    _onBackToolbar: PropTypes.func.isRequired,
+    _onCopyVerse: PropTypes.func.isRequired,
+    _onShareVerse: PropTypes.func.isRequired
+}
