@@ -51,7 +51,7 @@ const Books = [
     name: "Judges",
     name_id: "Hakim-Hakim",
     total: 21,
-    value: "Jud",
+    value: "Jdg",
     type: "old",
     playlistId: "43919544"
   },

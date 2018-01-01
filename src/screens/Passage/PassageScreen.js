@@ -34,7 +34,6 @@ import MediaPlayerControl from "../../components/MediaPlayerControl";
 import SelectedVerseToolBar from "../../components/SelectedVerseToolBar";
 import MainToolBar from "../../components/MainToolBar";
 
-
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
@@ -90,7 +89,7 @@ class PassageScreen extends Component {
                   animated: true
                 });
               }
-              );
+            );
             this.setState({
               selectedVerses: [this.state.activeVerse]
             });
@@ -238,8 +237,8 @@ class PassageScreen extends Component {
                         </Text>
                       </View>
                     ) : (
-                        <Text style={styles.chapterText}>{chapter}</Text>
-                      )}
+                      <Text style={styles.chapterText}>{chapter}</Text>
+                    )}
                   </TouchableOpacity>
                 );
               })}
@@ -358,7 +357,7 @@ class PassageScreen extends Component {
           );
         })[0];
         if (streamSong) {
-          console.log("SOOOONG", streamSong)
+          console.log("SOOOONG", streamSong);
           LayoutAnimation.easeInEaseOut();
           if (this.state.streamUrl) {
             this.setState(
@@ -457,8 +456,8 @@ class PassageScreen extends Component {
       return (
         <MainToolBar
           _openDrawer={() => this._openDrawer()}
-          _onShowSearch={()=> this._onShowSearch()}
-          _onPlayStreaming={()=> this._onPlayStreaming()}
+          _onShowSearch={() => this._onShowSearch()}
+          _onPlayStreaming={() => this._onPlayStreaming()}
           activeBook={activeBook}
           activeChapter={activeChapter}
         />
@@ -485,7 +484,7 @@ class PassageScreen extends Component {
     // console.log("PROGRESS", currentTime);
   };
 
-  onPlayEnd = () => { };
+  onPlayEnd = () => {};
 
   onLoad = data => {
     this.setState(
@@ -503,8 +502,8 @@ class PassageScreen extends Component {
 
         MusicControl.setNowPlaying({
           title: `${streamChapter &&
-          streamChapter.activeBook.name_id} ${streamChapter &&
-          streamChapter.activeChapter}`,
+            streamChapter.activeBook.name_id} ${streamChapter &&
+            streamChapter.activeChapter}`,
           artist: "Alkitab Suara",
           duration: this.state.streamDuration,
           color: 0xfffffff
@@ -516,8 +515,8 @@ class PassageScreen extends Component {
         MusicControl.on("pause", () => {
           this.setState({ paused: true });
         });
-        MusicControl.on("nextTrack", () => { });
-        MusicControl.on("previousTrack", () => { });
+        MusicControl.on("nextTrack", () => {});
+        MusicControl.on("previousTrack", () => {});
 
         MusicControl.updatePlayback({
           state: MusicControl.STATE_PLAYING
