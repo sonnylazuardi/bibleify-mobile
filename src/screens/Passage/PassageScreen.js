@@ -629,17 +629,32 @@ class PassageScreen extends Component {
         bookPath: `${book}.realm`
       },
       () => {
-        RNFS.copyFileAssets(
-          `${book}.realm.lock`,
-          RNFS.DocumentDirectoryPath + `/${book}.realm.lock`
-        );
-        RNFS.copyFileAssets(
-          `${book}.realm`,
-          RNFS.DocumentDirectoryPath + `/${book}.realm`
-        ).then(() => {
-          this.loadPassage();
-          this._bottomSheet.close();
-        });
+        if (Platform.OS == "android") {
+          RNFS.copyFileAssets(
+            `${book}.realm.lock`,
+            RNFS.DocumentDirectoryPath + `/${book}.realm.lock`
+          );
+          RNFS.copyFileAssets(
+            `${book}.realm`,
+            RNFS.DocumentDirectoryPath + `/${book}.realm`
+          ).then(() => {
+            this.loadPassage();
+            this._bottomSheet.close();
+          });
+        } else {
+          try {
+            RNFS.copyFile(
+              RNFS.MainBundlePath + `/${book}.realm`,
+              RNFS.DocumentDirectoryPath + `/${book}.realm`
+            );
+            RNFS.copyFile(
+              RNFS.MainBundlePath + `/${book}.realm.lock`,
+              RNFS.DocumentDirectoryPath + `/${book}.realm.lock`
+            );
+          } catch (e) {
+            console.log("FILE ALREADY EXISTS");
+          }
+        }
       }
     );
   }

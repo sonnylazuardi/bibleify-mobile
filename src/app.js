@@ -11,6 +11,8 @@ class App extends Component {
     searchText: ""
   };
   componentWillMount() {
+    RNFS.unlink(RNFS.DocumentDirectoryPath + "/nkjv.realm");
+    RNFS.unlink(RNFS.DocumentDirectoryPath + "/nkjv.realm.lock");
     if (Platform.OS == "android") {
       RNFS.copyFileAssets(
         "nkjv.realm",
@@ -21,8 +23,6 @@ class App extends Component {
         RNFS.DocumentDirectoryPath + "/nkjv.realm.lock"
       );
     } else {
-      RNFS.unlink(RNFS.DocumentDirectoryPath + "/nkjv.realm");
-      RNFS.unlink(RNFS.DocumentDirectoryPath + "/nkjv.realm.lock");
       try {
         RNFS.copyFile(
           RNFS.MainBundlePath + "/nkjv.realm",
