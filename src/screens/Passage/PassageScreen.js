@@ -492,6 +492,8 @@ class PassageScreen extends Component {
           _onBackToolbar={() => this._onBackToolbar()}
           _onCopyVerse={() => this._onCopyVerse()}
           _onShareVerse={() => this._onShareVerse()}
+          activeBook={activeBook}
+          activeChapter={activeChapter}
         />
       );
     } else {
