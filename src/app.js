@@ -13,24 +13,24 @@ class App extends Component {
   componentWillMount() {
     if (Platform.OS == "android") {
       RNFS.copyFileAssets(
-        "tb.realm",
-        RNFS.DocumentDirectoryPath + "/default.realm"
+        "nkjv.realm",
+        RNFS.DocumentDirectoryPath + "/nkjv.realm"
       );
       RNFS.copyFileAssets(
-        "tb.realm.lock",
-        RNFS.DocumentDirectoryPath + "/default.realm.lock"
+        "nkjv.realm.lock",
+        RNFS.DocumentDirectoryPath + "/nkjv.realm.lock"
       );
     } else {
-      RNFS.unlink(RNFS.DocumentDirectoryPath + "/default.realm");
-      RNFS.unlink(RNFS.DocumentDirectoryPath + "/default.realm.lock");
+      RNFS.unlink(RNFS.DocumentDirectoryPath + "/nkjv.realm");
+      RNFS.unlink(RNFS.DocumentDirectoryPath + "/nkjv.realm.lock");
       try {
         RNFS.copyFile(
-          RNFS.MainBundlePath + "/tb.realm",
-          RNFS.DocumentDirectoryPath + "/default.realm"
+          RNFS.MainBundlePath + "/nkjv.realm",
+          RNFS.DocumentDirectoryPath + "/nkjv.realm"
         );
         RNFS.copyFile(
-          RNFS.MainBundlePath + "/tb.realm.lock",
-          RNFS.DocumentDirectoryPath + "/default.realm.lock"
+          RNFS.MainBundlePath + "/nkjv.realm.lock",
+          RNFS.DocumentDirectoryPath + "/nkjv.realm.lock"
         );
       } catch (e) {
         console.log("FILE ALREADY EXISTS");

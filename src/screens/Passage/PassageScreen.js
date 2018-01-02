@@ -16,7 +16,8 @@ import {
   ActivityIndicator,
   LayoutAnimation,
   UIManager,
-  BackHandler
+  BackHandler,
+  Keyboard
 } from "react-native";
 const Realm = require("realm");
 import DrawerLayout from "react-native-drawer-layout";
@@ -33,6 +34,8 @@ import MusicControl from "react-native-music-control";
 import MediaPlayerControl from "../../components/MediaPlayerControl";
 import SelectedVerseToolBar from "../../components/SelectedVerseToolBar";
 import MainToolBar from "../../components/MainToolBar";
+import BottomSheet from "react-native-js-bottom-sheet";
+var RNFS = require("react-native-fs");
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -55,6 +58,7 @@ const PassageSchema = {
 class PassageScreen extends Component {
   _drawer;
   _scrollView;
+  _bottomSheet;
   state = {
     verses: [],
     activeBook: Books[0],
@@ -67,7 +71,8 @@ class PassageScreen extends Component {
     isLoadingSound: true,
     paused: false,
     streamDuration: 0,
-    streamCurrentTime: 0
+    streamCurrentTime: 0,
+    bookPath: "nkjv.realm"
   };
   componentDidUpdate(prevProps, prevState) {
     if (
@@ -99,7 +104,12 @@ class PassageScreen extends Component {
     }
   }
   loadPassage(callback) {
-    Realm.open({ schema: [PassageSchema], readOnly: true }).then(realm => {
+    Realm.open({
+      schema: [PassageSchema],
+      readOnly: true,
+      inMemory: false,
+      path: this.state.bookPath
+    }).then(realm => {
       const { activeBook, activeChapter, activeVerse } = this.state;
       let passages = realm.objects("Passage");
       let filteredPassages = passages.filtered(
@@ -284,13 +294,45 @@ class PassageScreen extends Component {
       jumpText: ""
     });
   }
+  _onChangeBook() {
+    Keyboard.dismiss();
+    this._bottomSheet.open();
+  }
   _renderDrawer() {
-    const { jumpText } = this.state;
+    const { jumpText, bookPath } = this.state;
+    let bookCaption = "New King James Version (NKJV)";
+    switch (bookPath) {
+      case "nkjv.realm":
+        bookCaption = "New King James Version (NKJV)";
+        break;
+      case "tb.realm":
+        bookCaption = "Terjemahan Baru (TB)";
+        break;
+      case "net.realm":
+        bookCaption = "New English Translation (NET)";
+        break;
+      case "jawa.realm":
+        bookCaption = "Bahasa Jawa";
+        break;
+      case "sunda.realm":
+        bookCaption = "Bahasa Sunda";
+        break;
+      case "toba.realm":
+        bookCaption = "Bahasa Batak Toba";
+        break;
+      case "makasar.realm":
+        bookCaption = "Bahasa Makassar";
+        break;
+    }
     return (
       <View style={styles.drawerWrapper}>
         <View style={styles.drawerHeader}>
-          <TouchableOpacity activeOpacity={0.7} style={styles.drawerVersion}>
-            <Text style={styles.versionText}>Terjemahan Baru</Text>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.drawerVersion}
+            onPress={() => this._onChangeBook()}
+          >
+            <Text style={styles.versionText}>{bookCaption}</Text>
             <Icon name="ios-book" size={25} color="#fff" />
           </TouchableOpacity>
           <TextInput
@@ -579,6 +621,87 @@ class PassageScreen extends Component {
     );
   }
 
+  _onLoadBook(book) {
+    RNFS.unlink(RNFS.DocumentDirectoryPath + `/${book}.realm`);
+    RNFS.unlink(RNFS.DocumentDirectoryPath + `/${book}.realm.lock`);
+    this.setState(
+      {
+        bookPath: `${book}.realm`
+      },
+      () => {
+        RNFS.copyFileAssets(
+          `${book}.realm.lock`,
+          RNFS.DocumentDirectoryPath + `/${book}.realm.lock`
+        );
+        RNFS.copyFileAssets(
+          `${book}.realm`,
+          RNFS.DocumentDirectoryPath + `/${book}.realm`
+        ).then(() => {
+          this.loadPassage();
+          this._bottomSheet.close();
+        });
+      }
+    );
+  }
+
+  _renderBottomSheet() {
+    return (
+      <BottomSheet
+        refs={ref => {
+          this._bottomSheet = ref;
+        }}
+        backButtonEnabled={true}
+        coverScreen={false}
+        title="Choose Book"
+        options={[
+          {
+            title: "Terjemahan Baru (TB)",
+            onPress: () => {
+              this._onLoadBook("tb");
+            }
+          },
+          {
+            title: "New King James Version (NKJV)",
+            onPress: () => {
+              this._onLoadBook("nkjv");
+            }
+          },
+          {
+            title: "New English Translation (NET)",
+            onPress: () => {
+              this._onLoadBook("net");
+            }
+          },
+          {
+            title: "Bahasa Jawa",
+            onPress: () => {
+              this._onLoadBook("jawa");
+            }
+          },
+          {
+            title: "Bahasa Sunda",
+            onPress: () => {
+              this._onLoadBook("sunda");
+            }
+          },
+          {
+            title: "Bahasa Batak Toba",
+            onPress: () => {
+              this._onLoadBook("toba");
+            }
+          },
+          {
+            title: "Bahasa Makassar",
+            onPress: () => {
+              this._onLoadBook("makasar");
+            }
+          }
+        ]}
+        isOpen={false}
+      />
+    );
+  }
+
   render() {
     const {
       verses,
@@ -594,78 +717,84 @@ class PassageScreen extends Component {
       directionalOffsetThreshold: 50
     };
     return (
-      <DrawerLayout
-        ref={drawer => {
-          this._drawer = drawer;
-        }}
-        drawerWidth={300}
-        drawerPosition={DrawerLayout.positions.Left}
-        renderNavigationView={this._renderDrawer.bind(this)}
-      >
-        {this._renderToolbar()}
-        <ScrollView
-          style={styles.container}
-          contentContainerStyle={[
-            styles.innerScroll,
-            streamUrl ? { paddingBottom: 100 } : { paddingBottom: 20 }
-          ]}
-          ref={scrollView => (this._scrollView = scrollView)}
+      <View style={{ flex: 1 }}>
+        <DrawerLayout
+          ref={drawer => {
+            this._drawer = drawer;
+          }}
+          drawerWidth={300}
+          drawerPosition={DrawerLayout.positions.Left}
+          renderNavigationView={this._renderDrawer.bind(this)}
+          onDrawerClose={() => {
+            Keyboard.dismiss();
+          }}
         >
-          <GestureRecognizer
-            onSwipeLeft={state => this._onSwipeLeft(state)}
-            onSwipeRight={state => this._onSwipeRight(state)}
-            config={swipeConfig}
+          {this._renderToolbar()}
+          <ScrollView
+            style={styles.container}
+            contentContainerStyle={[
+              styles.innerScroll,
+              streamUrl ? { paddingBottom: 100 } : { paddingBottom: 20 }
+            ]}
+            ref={scrollView => (this._scrollView = scrollView)}
           >
-            {verses.map((verse, i) => {
-              const isTitle = verse.type == "t";
-              const { selectedVerses } = this.state;
-              const isSelected = selectedVerses.indexOf(verse.verse) != -1;
-              return (
-                <View
-                  key={i}
-                  ref={"verse" + verse.verse}
-                  style={[isSelected ? styles.selectedVerse : null]}
-                >
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    onPress={() => this._onSelectVerse(verse.verse)}
+            <GestureRecognizer
+              onSwipeLeft={state => this._onSwipeLeft(state)}
+              onSwipeRight={state => this._onSwipeRight(state)}
+              config={swipeConfig}
+            >
+              {verses.map((verse, i) => {
+                const isTitle = verse.type == "t";
+                const { selectedVerses } = this.state;
+                const isSelected = selectedVerses.indexOf(verse.verse) != -1;
+                return (
+                  <View
+                    key={i}
+                    ref={"verse" + verse.verse}
+                    style={[isSelected ? styles.selectedVerse : null]}
                   >
-                    <Text
-                      style={[
-                        styles.text,
-                        isTitle ? styles.title : null,
-                        isSelected ? styles.textSelected : null
-                      ]}
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      onPress={() => this._onSelectVerse(verse.verse)}
                     >
-                      {!isTitle ? (
-                        <Text style={styles.verseNumber}>{verse.verse} </Text>
-                      ) : null}
-                      {verse.content}
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              );
-            })}
-          </GestureRecognizer>
-          {streamUrl ? (
-            <Video
-              source={{ uri: streamUrl }}
-              ref="audio"
-              volume={1.0}
-              muted={false}
-              paused={paused}
-              playInBackground={true}
-              playWhenInactive={true}
-              onProgress={this.onPlayProgress}
-              onEnd={this.onPlayEnd}
-              onLoad={this.onLoad}
-              resizeMode="cover"
-              repeat={false}
-            />
-          ) : null}
-        </ScrollView>
-        {this._renderPlayer()}
-      </DrawerLayout>
+                      <Text
+                        style={[
+                          styles.text,
+                          isTitle ? styles.title : null,
+                          isSelected ? styles.textSelected : null
+                        ]}
+                      >
+                        {!isTitle ? (
+                          <Text style={styles.verseNumber}>{verse.verse} </Text>
+                        ) : null}
+                        {verse.content}
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+            </GestureRecognizer>
+            {streamUrl ? (
+              <Video
+                source={{ uri: streamUrl }}
+                ref="audio"
+                volume={1.0}
+                muted={false}
+                paused={paused}
+                playInBackground={true}
+                playWhenInactive={true}
+                onProgress={this.onPlayProgress}
+                onEnd={this.onPlayEnd}
+                onLoad={this.onLoad}
+                resizeMode="cover"
+                repeat={false}
+              />
+            ) : null}
+          </ScrollView>
+          {this._renderPlayer()}
+        </DrawerLayout>
+        {this._renderBottomSheet()}
+      </View>
     );
   }
 }
@@ -764,7 +893,7 @@ const styles = StyleSheet.create({
   verseNumber: {
     fontWeight: "900",
     paddingRight: 20,
-    color: "#26405A",
+    color: "#999",
     fontSize: 10
   },
   drawerHeader: {
