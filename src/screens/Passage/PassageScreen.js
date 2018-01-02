@@ -34,7 +34,7 @@ import MusicControl from "react-native-music-control";
 import MediaPlayerControl from "../../components/MediaPlayerControl";
 import SelectedVerseToolBar from "../../components/SelectedVerseToolBar";
 import MainToolBar from "../../components/MainToolBar";
-import BottomSheet from "react-native-js-bottom-sheet";
+import BottomSheet from "../../components/BottomSheet";
 var RNFS = require("react-native-fs");
 
 UIManager.setLayoutAnimationEnabledExperimental &&
@@ -644,13 +644,16 @@ class PassageScreen extends Component {
         } else {
           try {
             RNFS.copyFile(
-              RNFS.MainBundlePath + `/${book}.realm`,
-              RNFS.DocumentDirectoryPath + `/${book}.realm`
-            );
-            RNFS.copyFile(
               RNFS.MainBundlePath + `/${book}.realm.lock`,
               RNFS.DocumentDirectoryPath + `/${book}.realm.lock`
             );
+            RNFS.copyFile(
+              RNFS.MainBundlePath + `/${book}.realm`,
+              RNFS.DocumentDirectoryPath + `/${book}.realm`
+            ).then(() => {
+              this.loadPassage();
+              this._bottomSheet.close();
+            });
           } catch (e) {
             console.log("FILE ALREADY EXISTS");
           }
