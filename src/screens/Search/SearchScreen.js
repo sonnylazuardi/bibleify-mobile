@@ -13,22 +13,11 @@ import {
 const Realm = require("realm");
 import DrawerLayout from "react-native-drawer-layout";
 import LinearGradient from "react-native-linear-gradient";
-import Books from "../../constants/Books";
 import Icon from "react-native-vector-icons/Ionicons";
 import Highlighter from "react-native-highlight-words";
-
-const PassageSchema = {
-  name: "Passage",
-  primaryKey: "id",
-  properties: {
-    id: "string",
-    content: "string",
-    book: "string",
-    chapter: "int",
-    verse: "int",
-    type: "string"
-  }
-};
+import Books from "../../constants/Books";
+import { queries } from "../../data/queries/Queries";
+const { searchPassage } = queries;
 
 class SearchScreen extends Component {
   _textInputSearch;
@@ -41,44 +30,32 @@ class SearchScreen extends Component {
       if (this.props.searchText != "") this.searchPassage();
     }, 100);
   }
+
   searchPassage() {
-    const { searchText } = this.props;
+    const { searchText, bookPath } = this.props;
     if (searchText == "") return;
-    Realm.open({ schema: [PassageSchema], readOnly: true }).then(realm => {
-      let passages = realm.objects("Passage");
-      if (searchText.indexOf(" ") != -1) {
-        let splitWords = searchText.replace("  ", " ").split(" ");
-        splitWords = splitWords
-          .map(word => (word != "" ? `content CONTAINS[c] "${word}"` : ""))
-          .filter(word => word);
-        // query = `${query} ${splitWords}`;
-        var query = `${splitWords.join(" OR ")} AND type != "t"`;
-      } else {
-        var query = `content CONTAINS[c] "${searchText}" AND type != "t"`;
-      }
-      let filteredPassages = passages.filtered(query).slice(0, 20);
-      const resultsRaw = Object.keys(filteredPassages);
-      const results = resultsRaw.map(key => filteredPassages[key]);
-      console.log(resultsRaw);
-      this.setState({
-        results: results
-      });
-    });
+    const results = searchPassage({ searchText, bookPath });
+    this.setState({ results });
   }
+
   _onHideSearch() {
     this.props.onHideSearch && this.props.onHideSearch();
   }
+
   _onChangeSearchText(searchText) {
     this.props.onChangeSearchText && this.props.onChangeSearchText(searchText);
     this.searchPassage();
   }
+
   _onJumpPassage(verse) {
     this.props.onJumpPassage && this.props.onJumpPassage(verse);
     this._onHideSearch();
   }
+
   _onClearSearchText() {
     this.props.onChangeSearchText && this.props.onChangeSearchText("");
   }
+
   render() {
     const { results } = this.state;
     const { searchText } = this.props;
@@ -124,9 +101,7 @@ class SearchScreen extends Component {
               >
                 <Text style={[styles.text]}>
                   <Text style={styles.result}>
-                    {
-                      Books.filter(book => book.value == verse.book)[0].name_id
-                    }{" "}
+                    {Books.filter(book => book.value == verse.book)[0].name_id}{" "}
                     {verse.chapter}:{verse.verse}{" "}
                   </Text>
                   <Highlighter
