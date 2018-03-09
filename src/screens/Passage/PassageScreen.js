@@ -21,39 +21,29 @@ import {
 } from "react-native";
 const Realm = require("realm");
 import DrawerLayout from "react-native-drawer-layout";
-import Books from "../../constants/Books";
 import GestureRecognizer, {
   swipeDirections
 } from "react-native-swipe-gestures";
+import MusicControl from "react-native-music-control";
 import Icon from "react-native-vector-icons/Ionicons";
 import Video from "react-native-video";
+var RNFS = require("react-native-fs");
+
+import Books from "../../constants/Books";
 import { SOUNDCLOUD_CLIENT_ID } from "../../constants/constants";
 import { bookNameHelper } from "../../helpers";
+import { queries } from "../../data/queries/Queries";
 
-import MusicControl from "react-native-music-control";
 import MediaPlayerControl from "../../components/MediaPlayerControl";
 import SelectedVerseToolBar from "../../components/SelectedVerseToolBar";
 import MainToolBar from "../../components/MainToolBar";
 import BottomSheet from "../../components/BottomSheet";
-var RNFS = require("react-native-fs");
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const RCTUIManager = require("NativeModules").UIManager;
-
-const PassageSchema = {
-  name: "Passage",
-  primaryKey: "id",
-  properties: {
-    id: "string",
-    content: "string",
-    book: "string",
-    chapter: "int",
-    verse: "int",
-    type: "string"
-  }
-};
+const { getPassage } = queries;
 
 class PassageScreen extends Component {
   _drawer;
@@ -83,9 +73,7 @@ class PassageScreen extends Component {
       this.loadPassage(() => {
         setTimeout(() => {
           if (this.state.activeVerse != prevState.activeVerse) {
-            this.refs[
-              `verse${this.state.activeVerse}`
-            ].measureLayout(
+            this.refs[`verse${this.state.activeVerse}`].measureLayout(
               findNodeHandle(this._scrollView),
               (ox, oy, width, height, px, py) => {
                 this._scrollView.scrollTo({
@@ -103,34 +91,20 @@ class PassageScreen extends Component {
       });
     }
   }
-  loadPassage(callback) {
-    Realm.open({
-      schema: [PassageSchema],
-      readOnly: true,
-      inMemory: false,
-      path: this.state.bookPath
-    }).then(realm => {
-      const { activeBook, activeChapter, activeVerse } = this.state;
-      let passages = realm.objects("Passage");
-      let filteredPassages = passages.filtered(
-        `book = "${activeBook.value}" AND chapter = "${activeChapter}"`
-      );
-      const versesRaw = Object.keys(filteredPassages);
-      if (versesRaw.length) {
-        const verses = versesRaw.map(key => filteredPassages[key]);
-        this.setState(
-          {
-            verses: verses
-          },
-          () => {
-            callback && callback();
-          }
-        );
-      }
-    });
+
+  loadPassage() {
+    const { activeBook, activeChapter } = this.state;
+    const { bookPath } = this.props;
+    const verses = getPassage({ activeBook, activeChapter, bookPath });
+    this.setState({ verses });
   }
+
   componentWillReceiveProps(nextProps) {
-    const { jumpPassage } = nextProps;
+    const { jumpPassage, bookPath } = nextProps;
+    console.log("wrp", bookPath);
+    if (bookPath !== this.props.bookPath) {
+      this.loadPassage();
+    }
     if (this.props.jumpPassage != jumpPassage && jumpPassage) {
       const activeBook = Books.filter(
         book => book.value == jumpPassage.book
@@ -298,8 +272,10 @@ class PassageScreen extends Component {
     Keyboard.dismiss();
     this._bottomSheet.open();
   }
+
   _renderDrawer() {
-    const { jumpText, bookPath } = this.state;
+    const { jumpText } = this.state;
+    const { bookPath } = this.props;
     let bookCaption = "New King James Version (NKJV)";
     switch (bookPath) {
       case "nkjv.realm":
@@ -380,7 +356,9 @@ class PassageScreen extends Component {
   }
   _onPlayStreaming() {
     const { activeBook, activeChapter } = this.state;
-    const url = `https://api.soundcloud.com/playlists/${activeBook.playlistId}?client_id=${SOUNDCLOUD_CLIENT_ID}&limit=150&offset=0`;
+    const url = `https://api.soundcloud.com/playlists/${
+      activeBook.playlistId
+    }?client_id=${SOUNDCLOUD_CLIENT_ID}&limit=150&offset=0`;
     console.log(url);
 
     fetch(url)
@@ -411,7 +389,9 @@ class PassageScreen extends Component {
               },
               () => {
                 setTimeout(() => {
-                  const streamUrl = `${streamSong.stream}?client_id=${SOUNDCLOUD_CLIENT_ID}`;
+                  const streamUrl = `${
+                    streamSong.stream
+                  }?client_id=${SOUNDCLOUD_CLIENT_ID}`;
                   this.setState({
                     streamUrl,
                     streamChapter: {
@@ -425,7 +405,9 @@ class PassageScreen extends Component {
               }
             );
           } else {
-            const streamUrl = `${streamSong.stream}?client_id=${SOUNDCLOUD_CLIENT_ID}`;
+            const streamUrl = `${
+              streamSong.stream
+            }?client_id=${SOUNDCLOUD_CLIENT_ID}`;
             this.setState({
               streamUrl,
               streamChapter: {
@@ -462,7 +444,9 @@ class PassageScreen extends Component {
     const contentList = selectedVerses.map(item => {
       const currentVerse = verses.filter(current => current.verse == item)[0];
       if (!currentVerse) return "";
-      return `${currentVerse.content} (${currentVerse.book} ${currentVerse.chapter}:${currentVerse.verse})\n`;
+      return `${currentVerse.content} (${currentVerse.book} ${
+        currentVerse.chapter
+      }:${currentVerse.verse})\n`;
     });
     Clipboard.setString(contentList.join("\n"));
     this.setState({
@@ -475,7 +459,9 @@ class PassageScreen extends Component {
     const contentList = selectedVerses.map(item => {
       const currentVerse = verses.filter(current => current.verse == item)[0];
       if (!currentVerse) return "";
-      return `${currentVerse.content} (${currentVerse.book} ${currentVerse.chapter}:${currentVerse.verse})\n`;
+      return `${currentVerse.content} (${currentVerse.book} ${
+        currentVerse.chapter
+      }:${currentVerse.verse})\n`;
     });
     const shareContent = contentList.join("\n");
     Share.share({
@@ -626,42 +612,38 @@ class PassageScreen extends Component {
   _onLoadBook(book) {
     RNFS.unlink(RNFS.DocumentDirectoryPath + `/${book}.realm`);
     RNFS.unlink(RNFS.DocumentDirectoryPath + `/${book}.realm.lock`);
-    this.setState(
-      {
-        bookPath: `${book}.realm`
-      },
-      () => {
-        if (Platform.OS == "android") {
-          RNFS.copyFileAssets(
-            `${book}.realm.lock`,
+    this.props.onBookPathChange(`${book}.realm`);
+    this.setState(() => {
+      if (Platform.OS == "android") {
+        RNFS.copyFileAssets(
+          `${book}.realm.lock`,
+          RNFS.DocumentDirectoryPath + `/${book}.realm.lock`
+        );
+        RNFS.copyFileAssets(
+          `${book}.realm`,
+          RNFS.DocumentDirectoryPath + `/${book}.realm`
+        ).then(() => {
+          this.loadPassage();
+          this._bottomSheet.close();
+        });
+      } else {
+        try {
+          RNFS.copyFile(
+            RNFS.MainBundlePath + `/${book}.realm.lock`,
             RNFS.DocumentDirectoryPath + `/${book}.realm.lock`
           );
-          RNFS.copyFileAssets(
-            `${book}.realm`,
+          RNFS.copyFile(
+            RNFS.MainBundlePath + `/${book}.realm`,
             RNFS.DocumentDirectoryPath + `/${book}.realm`
           ).then(() => {
             this.loadPassage();
             this._bottomSheet.close();
           });
-        } else {
-          try {
-            RNFS.copyFile(
-              RNFS.MainBundlePath + `/${book}.realm.lock`,
-              RNFS.DocumentDirectoryPath + `/${book}.realm.lock`
-            );
-            RNFS.copyFile(
-              RNFS.MainBundlePath + `/${book}.realm`,
-              RNFS.DocumentDirectoryPath + `/${book}.realm`
-            ).then(() => {
-              this.loadPassage();
-              this._bottomSheet.close();
-            });
-          } catch (e) {
-            console.log("FILE ALREADY EXISTS");
-          }
+        } catch (e) {
+          console.log("FILE ALREADY EXISTS");
         }
       }
-    );
+    });
   }
 
   _renderBottomSheet() {

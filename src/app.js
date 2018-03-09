@@ -8,7 +8,8 @@ var RNFS = require("react-native-fs");
 class App extends Component {
   state = {
     showSearch: false,
-    searchText: ""
+    searchText: "",
+    bookPath: "nkjv.realm"
   };
   componentWillMount() {
     RNFS.unlink(RNFS.DocumentDirectoryPath + "/nkjv.realm");
@@ -37,28 +38,38 @@ class App extends Component {
       }
     }
   }
+
   _onShowSearch() {
     this.setState({
       showSearch: true,
       jumpPassage: null
     });
   }
+
   _onHideSearch() {
     this.setState({ showSearch: false });
   }
+
   _onJumpPassage(verse) {
     this.setState({
       jumpPassage: verse
     });
   }
+
+  onBookPathChange(bookPath) {
+    this.setState({ bookPath });
+  }
+
   render() {
-    const { jumpPassage, searchText } = this.state;
+    const { jumpPassage, searchText, bookPath } = this.state;
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="#26405A" barStyle="light-content" />
         <PassageScreen
           onShowSearch={() => this._onShowSearch()}
           jumpPassage={jumpPassage}
+          onBookPathChange={bookPath => this.onBookPathChange(bookPath)}
+          bookPath={bookPath}
         />
         <Modal
           animationType="slide"
@@ -71,6 +82,7 @@ class App extends Component {
             onChangeSearchText={searchText => this.setState({ searchText })}
             onHideSearch={() => this._onHideSearch()}
             onJumpPassage={verse => this._onJumpPassage(verse)}
+            bookPath={bookPath}
           />
         </Modal>
       </View>
