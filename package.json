@@ -15,6 +15,7 @@
 		"react-native-linear-gradient": "^2.3.0",
 		"react-native-modalbox": "^1.4.2",
 		"react-native-music-control": "^0.5.1",
+		"react-native-safe-area-view": "^0.7.0",
 		"react-native-swipe-gestures": "^1.0.2",
 		"react-native-vector-icons": "^4.4.2",
 		"react-native-video": "^2.0.0",

@@ -20,11 +20,10 @@ import {
   Keyboard
 } from "react-native";
 const Realm = require("realm");
+import SafeAreaView from "react-native-safe-area-view";
 import DrawerLayout from "react-native-drawer-layout";
 import Books from "../../constants/Books";
-import GestureRecognizer, {
-  swipeDirections
-} from "react-native-swipe-gestures";
+import GestureRecognizer, { swipeDirections } from "react-native-swipe-gestures";
 import Icon from "react-native-vector-icons/Ionicons";
 import Video from "react-native-video";
 import { SOUNDCLOUD_CLIENT_ID } from "../../constants/constants";
@@ -37,8 +36,7 @@ import MainToolBar from "../../components/MainToolBar";
 import BottomSheet from "../../components/BottomSheet";
 var RNFS = require("react-native-fs");
 
-UIManager.setLayoutAnimationEnabledExperimental &&
-  UIManager.setLayoutAnimationEnabledExperimental(true);
+UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const RCTUIManager = require("NativeModules").UIManager;
 
@@ -83,9 +81,7 @@ class PassageScreen extends Component {
       this.loadPassage(() => {
         setTimeout(() => {
           if (this.state.activeVerse != prevState.activeVerse) {
-            this.refs[
-              `verse${this.state.activeVerse}`
-            ].measureLayout(
+            this.refs[`verse${this.state.activeVerse}`].measureLayout(
               findNodeHandle(this._scrollView),
               (ox, oy, width, height, px, py) => {
                 this._scrollView.scrollTo({
@@ -112,9 +108,7 @@ class PassageScreen extends Component {
     }).then(realm => {
       const { activeBook, activeChapter, activeVerse } = this.state;
       let passages = realm.objects("Passage");
-      let filteredPassages = passages.filtered(
-        `book = "${activeBook.value}" AND chapter = "${activeChapter}"`
-      );
+      let filteredPassages = passages.filtered(`book = "${activeBook.value}" AND chapter = "${activeChapter}"`);
       const versesRaw = Object.keys(filteredPassages);
       if (versesRaw.length) {
         const verses = versesRaw.map(key => filteredPassages[key]);
@@ -132,9 +126,7 @@ class PassageScreen extends Component {
   componentWillReceiveProps(nextProps) {
     const { jumpPassage } = nextProps;
     if (this.props.jumpPassage != jumpPassage && jumpPassage) {
-      const activeBook = Books.filter(
-        book => book.value == jumpPassage.book
-      )[0];
+      const activeBook = Books.filter(book => book.value == jumpPassage.book)[0];
       if (activeBook) {
         this.setState({
           activeBook,
@@ -225,10 +217,7 @@ class PassageScreen extends Component {
         <View key={`${book.value}-${i}`}>
           {bookButtonView}
           <View style={styles.chapterSelector}>
-            <ScrollView
-              horizontal={true}
-              contentContainerStyle={styles.chapterScroll}
-            >
+            <ScrollView horizontal={true} contentContainerStyle={styles.chapterScroll}>
               {chapters.map(chapter => {
                 const isChapterActive = chapter == activeChapter;
                 return (
@@ -240,11 +229,7 @@ class PassageScreen extends Component {
                   >
                     {isChapterActive ? (
                       <View style={styles.chapterActive}>
-                        <Text
-                          style={[styles.chapterText, styles.chapterTextActive]}
-                        >
-                          {chapter}
-                        </Text>
+                        <Text style={[styles.chapterText, styles.chapterTextActive]}>{chapter}</Text>
                       </View>
                     ) : (
                       <Text style={styles.chapterText}>{chapter}</Text>
@@ -274,9 +259,7 @@ class PassageScreen extends Component {
       }
       const splitChapter = jumpText.replace("  ", " ").split(" ");
       const activeBook = Books.filter(
-        book =>
-          book.name_id.toLowerCase().indexOf(splitChapter[0].toLowerCase()) !=
-          -1
+        book => book.name_id.toLowerCase().indexOf(splitChapter[0].toLowerCase()) != -1
       )[0];
       const currentChapter = parseInt(splitChapter[1]);
       if (activeBook) {
@@ -326,49 +309,39 @@ class PassageScreen extends Component {
     }
     return (
       <View style={styles.drawerWrapper}>
-        <View style={styles.drawerHeader}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.drawerVersion}
-            onPress={() => this._onChangeBook()}
-          >
-            <Text style={styles.versionText}>{bookCaption}</Text>
-            <Icon name="ios-book" size={25} color="#fff" />
-          </TouchableOpacity>
-          <TextInput
-            placeholder={"Jump here"}
-            placeholderTextColor={"rgba(255,255,255,0.3)"}
-            value={jumpText}
-            style={styles.input}
-            onSubmitEditing={() => this._onSubmitJump()}
-            onChangeText={jumpText => this._onJumpText(jumpText)}
-          />
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.clearJump}
-            onPress={() => this._onClearJump()}
-          >
-            <Icon name="ios-close" size={30} color="#fff" />
-          </TouchableOpacity>
-        </View>
-        <ScrollView>
-          <Text style={styles.separator}>OLD TESTAMENT</Text>
-          {Books.filter(
-            book =>
-              book.type == "old" &&
-              book.name_id.toLowerCase().indexOf(jumpText.toLowerCase()) != -1
-          ).map((book, i) => {
-            return this._renderBook(book, i);
-          })}
-          <Text style={styles.separator}>NEW TESTAMENT</Text>
-          {Books.filter(
-            book =>
-              book.type == "new" &&
-              book.name_id.toLowerCase().indexOf(jumpText.toLowerCase()) != -1
-          ).map((book, i) => {
-            return this._renderBook(book, i);
-          })}
-        </ScrollView>
+        <SafeAreaView style={{ flex: 1 }}>
+          <View style={styles.drawerHeader}>
+            <TouchableOpacity activeOpacity={0.7} style={styles.drawerVersion} onPress={() => this._onChangeBook()}>
+              <Text style={styles.versionText}>{bookCaption}</Text>
+              <Icon name="ios-book" size={25} color="#fff" />
+            </TouchableOpacity>
+            <TextInput
+              placeholder={"Jump here"}
+              placeholderTextColor={"rgba(255,255,255,0.3)"}
+              value={jumpText}
+              style={styles.input}
+              onSubmitEditing={() => this._onSubmitJump()}
+              onChangeText={jumpText => this._onJumpText(jumpText)}
+            />
+            <TouchableOpacity activeOpacity={0.7} style={styles.clearJump} onPress={() => this._onClearJump()}>
+              <Icon name="ios-close" size={30} color="#fff" />
+            </TouchableOpacity>
+          </View>
+          <ScrollView>
+            <Text style={styles.separator}>OLD TESTAMENT</Text>
+            {Books.filter(
+              book => book.type == "old" && book.name_id.toLowerCase().indexOf(jumpText.toLowerCase()) != -1
+            ).map((book, i) => {
+              return this._renderBook(book, i);
+            })}
+            <Text style={styles.separator}>NEW TESTAMENT</Text>
+            {Books.filter(
+              book => book.type == "new" && book.name_id.toLowerCase().indexOf(jumpText.toLowerCase()) != -1
+            ).map((book, i) => {
+              return this._renderBook(book, i);
+            })}
+          </ScrollView>
+        </SafeAreaView>
       </View>
     );
   }
@@ -545,9 +518,7 @@ class PassageScreen extends Component {
         const { streamChapter } = this.state;
 
         MusicControl.setNowPlaying({
-          title: `${streamChapter &&
-            streamChapter.activeBook.name_id} ${streamChapter &&
-            streamChapter.activeChapter}`,
+          title: `${streamChapter && streamChapter.activeBook.name_id} ${streamChapter && streamChapter.activeChapter}`,
           artist: "Alkitab Suara",
           duration: this.state.streamDuration,
           color: 0xfffffff
@@ -597,14 +568,7 @@ class PassageScreen extends Component {
   }
 
   _renderPlayer() {
-    const {
-      streamUrl,
-      streamChapter,
-      paused,
-      isLoadingSound,
-      streamDuration,
-      streamCurrentTime
-    } = this.state;
+    const { streamUrl, streamChapter, paused, isLoadingSound, streamDuration, streamCurrentTime } = this.state;
     console.log("current", streamCurrentTime, "duration", streamDuration);
     const progress = streamCurrentTime / streamDuration * 100;
     console.log("PROGRESS", progress);
@@ -632,14 +596,8 @@ class PassageScreen extends Component {
       },
       () => {
         if (Platform.OS == "android") {
-          RNFS.copyFileAssets(
-            `${book}.realm.lock`,
-            RNFS.DocumentDirectoryPath + `/${book}.realm.lock`
-          );
-          RNFS.copyFileAssets(
-            `${book}.realm`,
-            RNFS.DocumentDirectoryPath + `/${book}.realm`
-          ).then(() => {
+          RNFS.copyFileAssets(`${book}.realm.lock`, RNFS.DocumentDirectoryPath + `/${book}.realm.lock`);
+          RNFS.copyFileAssets(`${book}.realm`, RNFS.DocumentDirectoryPath + `/${book}.realm`).then(() => {
             this.loadPassage();
             this._bottomSheet.close();
           });
@@ -723,15 +681,7 @@ class PassageScreen extends Component {
   }
 
   render() {
-    const {
-      verses,
-      activeBook,
-      activeChapter,
-      streamUrl,
-      streamChapter,
-      paused,
-      isLoadingSound
-    } = this.state;
+    const { verses, activeBook, activeChapter, streamUrl, streamChapter, paused, isLoadingSound } = this.state;
     const swipeConfig = {
       velocityThreshold: 0.3,
       directionalOffsetThreshold: 50
@@ -749,69 +699,55 @@ class PassageScreen extends Component {
             Keyboard.dismiss();
           }}
         >
-          {this._renderToolbar()}
-          <ScrollView
-            style={styles.container}
-            contentContainerStyle={[
-              styles.innerScroll,
-              streamUrl ? { paddingBottom: 100 } : { paddingBottom: 20 }
-            ]}
-            ref={scrollView => (this._scrollView = scrollView)}
-          >
-            <GestureRecognizer
-              onSwipeLeft={state => this._onSwipeLeft(state)}
-              onSwipeRight={state => this._onSwipeRight(state)}
-              config={swipeConfig}
+          <SafeAreaView style={{ flex: 1 }}>
+            {this._renderToolbar()}
+            <ScrollView
+              style={styles.container}
+              contentContainerStyle={[styles.innerScroll, streamUrl ? { paddingBottom: 100 } : { paddingBottom: 20 }]}
+              ref={scrollView => (this._scrollView = scrollView)}
             >
-              {verses.map((verse, i) => {
-                const isTitle = verse.type == "t";
-                const { selectedVerses } = this.state;
-                const isSelected = selectedVerses.indexOf(verse.verse) != -1;
-                return (
-                  <View
-                    key={i}
-                    ref={"verse" + verse.verse}
-                    style={[isSelected ? styles.selectedVerse : null]}
-                  >
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      onPress={() => this._onSelectVerse(verse.verse)}
-                    >
-                      <Text
-                        style={[
-                          styles.text,
-                          isTitle ? styles.title : null,
-                          isSelected ? styles.textSelected : null
-                        ]}
-                      >
-                        {!isTitle ? (
-                          <Text style={styles.verseNumber}>{verse.verse} </Text>
-                        ) : null}
-                        {verse.content}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                );
-              })}
-            </GestureRecognizer>
-            {streamUrl ? (
-              <Video
-                source={{ uri: streamUrl }}
-                ref="audio"
-                volume={1.0}
-                muted={false}
-                paused={paused}
-                playInBackground={true}
-                playWhenInactive={true}
-                onProgress={this.onPlayProgress}
-                onEnd={this.onPlayEnd}
-                onLoad={this.onLoad}
-                resizeMode="cover"
-                repeat={false}
-              />
-            ) : null}
-          </ScrollView>
-          {this._renderPlayer()}
+              <GestureRecognizer
+                onSwipeLeft={state => this._onSwipeLeft(state)}
+                onSwipeRight={state => this._onSwipeRight(state)}
+                config={swipeConfig}
+              >
+                {verses.map((verse, i) => {
+                  const isTitle = verse.type == "t";
+                  const { selectedVerses } = this.state;
+                  const isSelected = selectedVerses.indexOf(verse.verse) != -1;
+                  return (
+                    <View key={i} ref={"verse" + verse.verse} style={[isSelected ? styles.selectedVerse : null]}>
+                      <TouchableOpacity activeOpacity={0.7} onPress={() => this._onSelectVerse(verse.verse)}>
+                        <Text
+                          style={[styles.text, isTitle ? styles.title : null, isSelected ? styles.textSelected : null]}
+                        >
+                          {!isTitle ? <Text style={styles.verseNumber}>{verse.verse} </Text> : null}
+                          {verse.content}
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  );
+                })}
+              </GestureRecognizer>
+              {streamUrl ? (
+                <Video
+                  source={{ uri: streamUrl }}
+                  ref="audio"
+                  volume={1.0}
+                  muted={false}
+                  paused={paused}
+                  playInBackground={true}
+                  playWhenInactive={true}
+                  onProgress={this.onPlayProgress}
+                  onEnd={this.onPlayEnd}
+                  onLoad={this.onLoad}
+                  resizeMode="cover"
+                  repeat={false}
+                />
+              ) : null}
+            </ScrollView>
+            {this._renderPlayer()}
+          </SafeAreaView>
         </DrawerLayout>
         {this._renderBottomSheet()}
       </View>
@@ -850,15 +786,15 @@ const styles = StyleSheet.create({
   icon: {},
   container: {
     flex: 1,
-    backgroundColor: "#0D233A"
+    backgroundColor: "#fff"
   },
   drawerWrapper: {
-    backgroundColor: "#1f364d",
+    backgroundColor: "#000",
     flex: 1,
     paddingTop: 20
   },
   text: {
-    color: "#fff",
+    color: "#444",
     lineHeight: 30,
     paddingHorizontal: 25
   },
@@ -951,10 +887,10 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent"
   },
   selectedVerse: {
-    backgroundColor: "#fff"
+    backgroundColor: "#ddd"
   },
   textSelected: {
-    color: "#1f364d"
+    color: "#000"
   }
 });
 

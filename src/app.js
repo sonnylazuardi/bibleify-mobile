@@ -14,24 +14,12 @@ class App extends Component {
     RNFS.unlink(RNFS.DocumentDirectoryPath + "/nkjv.realm");
     RNFS.unlink(RNFS.DocumentDirectoryPath + "/nkjv.realm.lock");
     if (Platform.OS == "android") {
-      RNFS.copyFileAssets(
-        "nkjv.realm",
-        RNFS.DocumentDirectoryPath + "/nkjv.realm"
-      );
-      RNFS.copyFileAssets(
-        "nkjv.realm.lock",
-        RNFS.DocumentDirectoryPath + "/nkjv.realm.lock"
-      );
+      RNFS.copyFileAssets("nkjv.realm", RNFS.DocumentDirectoryPath + "/nkjv.realm");
+      RNFS.copyFileAssets("nkjv.realm.lock", RNFS.DocumentDirectoryPath + "/nkjv.realm.lock");
     } else {
       try {
-        RNFS.copyFile(
-          RNFS.MainBundlePath + "/nkjv.realm",
-          RNFS.DocumentDirectoryPath + "/nkjv.realm"
-        );
-        RNFS.copyFile(
-          RNFS.MainBundlePath + "/nkjv.realm.lock",
-          RNFS.DocumentDirectoryPath + "/nkjv.realm.lock"
-        );
+        RNFS.copyFile(RNFS.MainBundlePath + "/nkjv.realm", RNFS.DocumentDirectoryPath + "/nkjv.realm");
+        RNFS.copyFile(RNFS.MainBundlePath + "/nkjv.realm.lock", RNFS.DocumentDirectoryPath + "/nkjv.realm.lock");
       } catch (e) {
         console.log("FILE ALREADY EXISTS");
       }
@@ -55,11 +43,8 @@ class App extends Component {
     const { jumpPassage, searchText } = this.state;
     return (
       <View style={styles.container}>
-        <StatusBar backgroundColor="#26405A" barStyle="light-content" />
-        <PassageScreen
-          onShowSearch={() => this._onShowSearch()}
-          jumpPassage={jumpPassage}
-        />
+        <StatusBar backgroundColor="#fff" barStyle="default" />
+        <PassageScreen onShowSearch={() => this._onShowSearch()} jumpPassage={jumpPassage} />
         <Modal
           animationType="slide"
           transparent={false}
