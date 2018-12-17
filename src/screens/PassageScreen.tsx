@@ -3,8 +3,11 @@ import React from 'react';
 import { Component } from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
+import { NavigationScreenProp } from 'react-navigation';
 
-interface Props {}
+interface Props {
+  navigation: NavigationScreenProp<any, any>;
+}
 const PassageIcon = ({ focused }) => {
   if (focused) {
     return <Icon name="book" size={18} color="#fff" />;
@@ -19,9 +22,10 @@ export default class PassageScreen extends Component<Props> {
     tabBarIcon: PassageIcon,
   };
   public render() {
+    const { navigation } = this.props;
     return (
       <View style={styles.container}>
-        <Header />
+        <Header navigation={navigation} />
         <ScrollView style={styles.scroll}>
           <View style={styles.item}>
             <Text style={styles.itemTitle}>Firman yang telah menjadi manusia</Text>

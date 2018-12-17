@@ -1,41 +1,30 @@
 import Header from 'components/Header';
 import React from 'react';
 import { Component } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 
 interface Props {}
 export default class BookScreen extends Component<Props> {
-  public static navigationOptions = {
-    title: 'Passage',
-    tabBarIcon: PassageIcon,
-  };
   public render() {
     return (
       <View style={styles.container}>
-        <Header />
-        <ScrollView style={styles.scroll}>
-          <View style={styles.item}>
-            <Text style={styles.itemTitle}>Firman yang telah menjadi manusia</Text>
-          </View>
-          {(() => {
-            const items = [];
-            for (let i = 0; i < 40; i++) {
-              items.push(
-                <View key={i} style={styles.item}>
-                  <Text style={styles.itemText}>
-                    <Text style={styles.itemVerse}>{i} </Text>
-                    <Text style={styles.itemContent}>
-                      Pada mulanya adalah Firman; Firman itu bersama-sama dengan Allah dan Firman itu adalah Allah.
-                      Lorem ipsum
-                    </Text>
-                  </Text>
-                </View>,
-              );
-            }
-            return items;
-          })()}
-        </ScrollView>
+        <View style={styles.header}>
+          <Text style={styles.title}>Terjemahan Baru</Text>
+        </View>
+        <View style={styles.item}>
+          <TextInput />
+        </View>
+
+        <View style={styles.item}>
+          <Text style={styles.itemText}>Genesis</Text>
+        </View>
+        <View style={styles.item}>
+          <Text style={styles.itemText}>Exodus</Text>
+        </View>
+        <View style={styles.item}>
+          <Text style={styles.itemText}>Ecclesiastes</Text>
+        </View>
       </View>
     );
   }

@@ -29,10 +29,11 @@ export default class SettingScreen extends Component<Props> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#282C32',
   },
   welcome: {
     fontSize: 20,
+    color: '#fff',
     textAlign: 'center',
     margin: 10,
   },

@@ -3,14 +3,17 @@ import { Component } from 'react';
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
 import { BaseButton } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
+import { NavigationScreenProp } from 'react-navigation';
 
-interface Props {}
+interface Props {
+  navigation: NavigationScreenProp<any, any>;
+}
 export default class Header extends Component<Props> {
   public render() {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="#3B3F4A" barStyle="light-content" />
-        <BaseButton style={styles.box} onPress={() => {}}>
+        <BaseButton style={styles.box} onPress={() => this.onNavigateBook()}>
           <Icon size={18} name="book-open" color="#fff" />
         </BaseButton>
         <View style={styles.header}>
@@ -21,6 +24,10 @@ export default class Header extends Component<Props> {
         </BaseButton>
       </View>
     );
+  }
+  private onNavigateBook() {
+    console.log('NAVIGATE');
+    this.props.navigation.navigate({ key: 'Book', routeName: 'Book' });
   }
 }
 
