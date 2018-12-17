@@ -1,8 +1,16 @@
+import React from 'react';
+import { Component } from 'react';
 import { createBottomTabNavigator, createStackNavigator } from 'react-navigation';
 import BookScreen from 'screens/BookScreen';
 import PassageScreen from 'screens/PassageScreen';
 import SearchScreen from 'screens/SearchScreen';
 import SettingScreen from 'screens/SettingScreen';
+
+import { init } from '@rematch/core';
+import { Provider } from 'react-redux';
+import * as models from './models';
+
+const store = init({ models });
 
 const reactNavigation = require('react-navigation');
 const AppNavigator = createStackNavigator(
@@ -37,4 +45,15 @@ const AppNavigator = createStackNavigator(
   },
 );
 
-export default reactNavigation.createAppContainer(AppNavigator);
+const Navigator = reactNavigation.createAppContainer(AppNavigator);
+interface Props {}
+
+export default class App extends Component<Props> {
+  public render() {
+    return (
+      <Provider store={store}>
+        <Navigator />
+      </Provider>
+    );
+  }
+}

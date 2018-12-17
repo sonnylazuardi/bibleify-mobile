@@ -47,7 +47,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 0,
   },
-  itemText: {},
+  itemText: {
+    color: '#fff',
+  },
   itemTitle: {
     marginTop: 32,
     marginBottom: 16,

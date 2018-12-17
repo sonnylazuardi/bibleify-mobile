@@ -533,7 +533,7 @@
     pirates "^4.0.0"
     source-map-support "^0.5.9"
 
-"@babel/runtime@^7.0.0":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.2.0":
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.2.0.tgz#b03e42eeddf5898e00646e4c840fa07ba8dcad7f"
   dependencies:
@@ -588,6 +588,12 @@
     react-native-gesture-handler "^1.0.0"
     react-native-safe-area-view "^0.11.0"
     react-native-screens "^1.0.0 || ^1.0.0-alpha"
+
+"@rematch/core@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@rematch/core/-/core-1.0.6.tgz#84677e62111f7d720c3ec552c1f9916353f4cbc3"
+  dependencies:
+    redux "4.0.0"
 
 "@types/prop-types@*":
   version "15.5.8"
@@ -2341,7 +2347,7 @@ hoist-non-react-statics@^2.3.1, hoist-non-react-statics@^2.5.0:
   version "2.5.5"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-2.5.5.tgz#c5903cf409c0dfd908f388e619d86b9c1174cb47"
 
-hoist-non-react-statics@^3.0.1:
+hoist-non-react-statics@^3.0.1, hoist-non-react-statics@^3.2.1:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.2.1.tgz#c09c0555c84b38a7ede6912b61efddafd6e75e1e"
   dependencies:
@@ -4239,7 +4245,7 @@ react-devtools-core@^3.4.2:
     shell-quote "^1.6.1"
     ws "^3.3.1"
 
-react-is@^16.3.2, react-is@^16.5.2, react-is@^16.6.1:
+react-is@^16.3.2, react-is@^16.5.2, react-is@^16.6.1, react-is@^16.6.3:
   version "16.6.3"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.6.3.tgz#d2d7462fcfcbe6ec0da56ad69047e47e56e7eac0"
 
@@ -4379,6 +4385,17 @@ react-proxy@^1.1.7:
     lodash "^4.6.1"
     react-deep-force-update "^1.0.0"
 
+react-redux@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-6.0.0.tgz#09e86eeed5febb98e9442458ad2970c8f1a173ef"
+  dependencies:
+    "@babel/runtime" "^7.2.0"
+    hoist-non-react-statics "^3.2.1"
+    invariant "^2.2.4"
+    loose-envify "^1.4.0"
+    prop-types "^15.6.2"
+    react-is "^16.6.3"
+
 react-test-renderer@16.6.1:
   version "16.6.1"
   resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.6.1.tgz#8ea357652be3cf81cbd6b2f686e74ebe67c17b78"
@@ -4475,6 +4492,13 @@ realpath-native@^1.0.0:
   resolved "https://registry.yarnpkg.com/realpath-native/-/realpath-native-1.0.2.tgz#cd51ce089b513b45cf9b1516c82989b51ccc6560"
   dependencies:
     util.promisify "^1.0.0"
+
+redux@4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/redux/-/redux-4.0.0.tgz#aa698a92b729315d22b34a0553d7e6533555cc03"
+  dependencies:
+    loose-envify "^1.1.0"
+    symbol-observable "^1.2.0"
 
 redux@^4.0.0:
   version "4.0.1"
