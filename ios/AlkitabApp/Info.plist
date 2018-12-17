@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Alkitab Suara App</string>
+	<string>AlkitabApp</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -17,47 +17,15 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.5</string>
+	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>6</string>
-	<key>LSApplicationCategoryType</key>
-	<string/>
+	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSExceptionDomains</key>
-		<dict>
-			<key>localhost</key>
-			<dict>
-				<key>NSExceptionAllowsInsecureHTTPLoads</key>
-				<true/>
-			</dict>
-		</dict>
-	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Entypo.ttf</string>
-		<string>EvilIcons.ttf</string>
-		<string>FontAwesome.ttf</string>
-		<string>Foundation.ttf</string>
-		<string>Ionicons.ttf</string>
-		<string>MaterialCommunityIcons.ttf</string>
-		<string>MaterialIcons.ttf</string>
-		<string>Octicons.ttf</string>
-		<string>SimpleLineIcons.ttf</string>
-		<string>Zocial.ttf</string>
-		<string>Feather.ttf</string>
-	</array>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>audio</string>
-		<string>fetch</string>
-	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIRequiredDeviceCapabilities</key>
@@ -72,5 +40,36 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>AntDesign.ttf</string>
+		<string>Entypo.ttf</string>
+		<string>EvilIcons.ttf</string>
+		<string>Feather.ttf</string>
+		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
+		<string>Foundation.ttf</string>
+		<string>Ionicons.ttf</string>
+		<string>MaterialCommunityIcons.ttf</string>
+		<string>MaterialIcons.ttf</string>
+		<string>Octicons.ttf</string>
+		<string>SimpleLineIcons.ttf</string>
+		<string>Zocial.ttf</string>
+	</array>
 </dict>
 </plist>

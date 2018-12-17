@@ -1,4 +1,4 @@
-# Alkitab Suara App
+# Bibleify Mobile
 
 📖 Beautiful & fast offline bible app with 🔊 dramatic sound (AlkitabSuara) using react native & realm
 

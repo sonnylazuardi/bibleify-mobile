@@ -46,14 +46,18 @@ buck-out/
 # It is recommended to not store the screenshots in the git repo. Instead, use fastlane to re-generate the
 # screenshots whenever they are needed.
 # For more information about the recommended setup visit:
-# https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Gitignore.md
+# https://docs.fastlane.tools/best-practices/source-control/
 
-fastlane/report.xml
-fastlane/Preview.html
-fastlane/screenshots
-android/app/app-armeabi-v7a-release.apk
-android/app/app-universal-release.apk
-android/app/app-x86-release.apk
+*/fastlane/report.xml
+*/fastlane/Preview.html
+*/fastlane/screenshots
 
-#local files
-/src/config/local.js
+# Bundle artifact
+*.jsbundle
+
+# Jest
+#
+.jest/
+
+# Test coverage
+coverage/
