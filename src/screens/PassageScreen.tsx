@@ -1,9 +1,10 @@
 import Header from 'components/Header';
 import React from 'react';
 import { Component } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, View } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { NavigationScreenProp } from 'react-navigation';
+import { Transition } from 'react-navigation-fluid-transitions';
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -24,31 +25,38 @@ export default class PassageScreen extends Component<Props> {
   public render() {
     const { navigation } = this.props;
     return (
-      <View style={styles.container}>
-        <Header navigation={navigation} />
-        <ScrollView style={styles.scroll}>
-          <View style={styles.item}>
-            <Text style={styles.itemTitle}>Firman yang telah menjadi manusia</Text>
-          </View>
-          {(() => {
-            const items = [];
-            for (let i = 0; i < 40; i++) {
-              items.push(
-                <View key={i} style={styles.item}>
-                  <Text style={styles.itemText}>
-                    <Text style={styles.itemVerse}>{i} </Text>
-                    <Text style={styles.itemContent}>
-                      Pada mulanya adalah Firman; Firman itu bersama-sama dengan Allah dan Firman itu adalah Allah.
-                      Lorem ipsum
-                    </Text>
-                  </Text>
-                </View>,
-              );
-            }
-            return items;
-          })()}
-        </ScrollView>
-      </View>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+          <Header navigation={navigation} />
+          <ScrollView style={styles.scroll}>
+            <Transition shared="book" appear="scale">
+              <ImageBackground source={require('assets/genesis.jpg')} style={styles.book} imageStyle={styles.bookImg}>
+                <Text style={styles.bookText}>Genesis</Text>
+              </ImageBackground>
+            </Transition>
+            <View style={styles.item}>
+              <Text style={styles.itemTitle}>Firman yang telah menjadi manusia</Text>
+            </View>
+            {(() => {
+              const items = [];
+              for (let i = 0; i < 40; i++) {
+                items.push(
+                  <View key={i} style={styles.item}>
+                    <View style={styles.itemText}>
+                      <Text style={styles.itemVerse}>{i} </Text>
+                      <Text style={styles.itemContent}>
+                        Pada mulanya adalah Firman; Firman itu bersama-sama dengan Allah dan Firman itu adalah Allah.
+                        Lorem ipsum
+                      </Text>
+                    </View>
+                  </View>,
+                );
+              }
+              return items;
+            })()}
+          </ScrollView>
+        </View>
+      </SafeAreaView>
     );
   }
 }
@@ -70,21 +78,38 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 0,
   },
-  itemText: {},
+  itemText: {
+    flexDirection: 'row',
+  },
+  bookText: {
+    color: '#fff',
+    fontFamily: 'Lato-Black',
+    fontSize: 18,
+    position: 'absolute',
+    bottom: 16,
+    left: 16,
+  },
+  book: {
+    backgroundColor: '#ddd',
+    height: 200,
+    flex: 1,
+  },
+  bookImg: {},
   itemTitle: {
     marginTop: 32,
     marginBottom: 16,
-    fontSize: 14,
+    fontSize: 26,
     color: '#fff',
-    fontWeight: '700',
+    fontFamily: 'Lato-Black',
   },
   itemContent: {
     fontSize: 13,
     color: '#fff',
     lineHeight: 24,
+    fontFamily: 'Lato-Regular',
   },
   itemVerse: {
     color: '#ffffff66',
-    fontWeight: '700',
+    fontFamily: 'Lato-Black',
   },
 });

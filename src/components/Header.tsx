@@ -1,7 +1,7 @@
 import React from 'react';
 import { Component } from 'react';
 import { StatusBar, StyleSheet, Text, View } from 'react-native';
-import { BaseButton } from 'react-native-gesture-handler';
+import { BorderlessButton } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/Feather';
 import { NavigationScreenProp } from 'react-navigation';
 
@@ -13,15 +13,15 @@ export default class Header extends Component<Props> {
     return (
       <View style={styles.container}>
         <StatusBar backgroundColor="#3B3F4A" barStyle="light-content" />
-        <BaseButton style={styles.box} onPress={() => this.onNavigateBook()}>
+        <BorderlessButton style={styles.box} onPress={() => this.onNavigateBook()}>
           <Icon size={18} name="book-open" color="#fff" />
-        </BaseButton>
+        </BorderlessButton>
         <View style={styles.header}>
           <Text style={styles.title}>Genesis 1</Text>
         </View>
-        <BaseButton style={styles.box} onPress={() => {}}>
+        <BorderlessButton style={styles.box} onPress={() => {}}>
           <Icon size={18} name="headphones" color="#fff" />
-        </BaseButton>
+        </BorderlessButton>
       </View>
     );
   }
@@ -44,9 +44,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   title: {
-    fontWeight: '700',
     fontSize: 14,
     color: '#fff',
+    fontFamily: 'Lato-Black',
   },
   box: {
     width: 60,
