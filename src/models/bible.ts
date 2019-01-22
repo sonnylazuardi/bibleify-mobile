@@ -1,6 +1,9 @@
 import Books from 'constants/Books';
 import Schema from 'constants/Schema';
 import Versions from 'constants/Versions';
+import { Platform } from 'react-native';
+import RNFS from 'react-native-fs';
+import Realm from 'realm';
 
 export const bible = {
   state: {
@@ -50,8 +53,14 @@ export const bible = {
     },
   },
   effects: {
+    loadVersion() {
+      if (Platform.OS == 'ios') {
+      }
+      RNFS.copyFileAssets(`tb.realm`, `${RNFS.DocumentDirectoryPath}/tb.realm`);
+    },
     fetchVerses(payload) {
       const { activeVersion, activeBook, activeChapter } = payload;
+
       Realm.open({
         schema: [Schema.PassageSchema],
         readOnly: true,

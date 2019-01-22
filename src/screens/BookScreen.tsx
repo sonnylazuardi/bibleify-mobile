@@ -37,11 +37,25 @@ export default class BookScreen extends Component<Props> {
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.container}>
           <StatusBar backgroundColor="#282C32" barStyle="light-content" />
+          
           <View style={styles.header}>
             <Text style={styles.title}>Bibleify</Text>
           </View>
           <View style={styles.search}>
             <TextInput style={styles.input} placeholder={'Search...'} placeholderTextColor={'#999'} />
+          </View>
+
+          <View style={styles.itemWrap}>
+            <View style={styles.shadowWrap}>
+              <BoxShadow setting={SHADOW_OPTION} />
+            </View>
+            <RectButton onPress={() => {}}>
+              <Transition shared="book">
+                <ImageBackground source={require('assets/genesis.jpg')} style={styles.item} imageStyle={styles.itemImg}>
+                  <Text style={styles.itemText}>Genesis</Text>
+                </ImageBackground>
+              </Transition>
+            </RectButton>
           </View>
 
           <View style={styles.itemWrap}>
@@ -89,19 +103,6 @@ export default class BookScreen extends Component<Props> {
               >
                 <Text style={styles.itemText}>Deuteronomy</Text>
               </ImageBackground>
-            </RectButton>
-          </View>
-
-          <View style={styles.itemWrap}>
-            <View style={styles.shadowWrap}>
-              <BoxShadow setting={SHADOW_OPTION} />
-            </View>
-            <RectButton onPress={() => {}}>
-              <Transition shared="book">
-                <ImageBackground source={require('assets/genesis.jpg')} style={styles.item} imageStyle={styles.itemImg}>
-                  <Text style={styles.itemText}>Genesis</Text>
-                </ImageBackground>
-              </Transition>
             </RectButton>
           </View>
         </ScrollView>

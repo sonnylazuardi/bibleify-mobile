@@ -43,6 +43,7 @@
 		2F3CF1EF21F07E2000B56AE0 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2F3CF1EB21F07E2000B56AE0 /* Lato-Regular.ttf */; };
 		2F3CF1F021F07E2000B56AE0 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2F3CF1EC21F07E2000B56AE0 /* Lato-Bold.ttf */; };
 		2F3CF1F121F07E2000B56AE0 /* Lato-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2F3CF1ED21F07E2000B56AE0 /* Lato-Medium.ttf */; };
+		2FD628DE21F727EC00B72190 /* tb.realm in Resources */ = {isa = PBXBuildFile; fileRef = 2FD628B021F727EC00B72190 /* tb.realm */; };
 		3E567D80284F412BB1730F96 /* FontAwesome5_Brands.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C07F4719AA49482CB9CF56DC /* FontAwesome5_Brands.ttf */; };
 		59C7E22428B941DC89BFEC75 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DAC67F673BFF415685A39045 /* libRNVectorIcons.a */; };
 		5E78252FE0C84B2BBEA19CE4 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4B26D8BC7EEF40C7B8D9034D /* libc++.tbd */; };
@@ -428,6 +429,7 @@
 		2F3CF1EB21F07E2000B56AE0 /* Lato-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Regular.ttf"; path = "../src/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; };
 		2F3CF1EC21F07E2000B56AE0 /* Lato-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Bold.ttf"; path = "../src/fonts/Lato-Bold.ttf"; sourceTree = "<group>"; };
 		2F3CF1ED21F07E2000B56AE0 /* Lato-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Lato-Medium.ttf"; path = "../src/fonts/Lato-Medium.ttf"; sourceTree = "<group>"; };
+		2FD628B021F727EC00B72190 /* tb.realm */ = {isa = PBXFileReference; lastKnownFileType = file; path = tb.realm; sourceTree = "<group>"; };
 		3941472B53F9466CB09D6ECD /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		404993E833234CE1A0C723C4 /* libRNSVG-tvOS.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = "libRNSVG-tvOS.a"; sourceTree = "<group>"; };
 		4A38E7AA604F4FA480754053 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
@@ -618,6 +620,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				2FD628B021F727EC00B72190 /* tb.realm */,
 			);
 			name = AlkitabApp;
 			sourceTree = "<group>";
@@ -1346,6 +1349,7 @@
 				623969D4F9F64EDC91055C36 /* AntDesign.ttf in Resources */,
 				2F3CF1EF21F07E2000B56AE0 /* Lato-Regular.ttf in Resources */,
 				E9FB627B14C54FE395A668C5 /* Entypo.ttf in Resources */,
+				2FD628DE21F727EC00B72190 /* tb.realm in Resources */,
 				8D38B37BDCE747E9BAE19053 /* EvilIcons.ttf in Resources */,
 				98A406D0FF2D4957A8CA720B /* Feather.ttf in Resources */,
 				B920AE89A2AB420DA495D41C /* FontAwesome.ttf in Resources */,

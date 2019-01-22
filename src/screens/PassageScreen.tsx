@@ -5,9 +5,11 @@ import { ImageBackground, SafeAreaView, ScrollView, StyleSheet, Text, View } fro
 import Icon from 'react-native-vector-icons/Feather';
 import { NavigationScreenProp } from 'react-navigation';
 import { Transition } from 'react-navigation-fluid-transitions';
+import { connect } from 'react-redux';
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
+  bible: any;
 }
 const PassageIcon = ({ focused }) => {
   if (focused) {
@@ -17,13 +19,17 @@ const PassageIcon = ({ focused }) => {
   }
 };
 
-export default class PassageScreen extends Component<Props> {
+class PassageScreen extends Component<Props> {
   public static navigationOptions = {
     title: 'Passage',
     tabBarIcon: PassageIcon,
   };
+  public componentDidMount() {
+    this.props.dispatch.bible.fetchVerses(this.props.bible);
+  }
   public render() {
-    const { navigation } = this.props;
+    const { navigation, bible } = this.props;
+    console.log('BIBLE', bible);
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.container}>
@@ -113,3 +119,10 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Black',
   },
 });
+
+export default connect(
+  state => ({
+    bible: state.bible,
+  }),
+  dispatch => ({ dispatch }),
+)(PassageScreen);
