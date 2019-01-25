@@ -13,7 +13,7 @@ const Books = [
     name: 'Exodus',
     name_id: 'Keluaran',
     total: 40,
-    value: 'Exo',
+    value: '1k',
     value_id: 'Kel',
     type: 'old',
     playlistId: '42042217',
@@ -87,6 +87,7 @@ const Books = [
     value_id: '1Sa',
     type: 'old',
     playlistId: '45974662',
+    image: require('assets/1sam.jpg'),
   },
   {
     name: '2 Samuel',
@@ -96,6 +97,7 @@ const Books = [
     value_id: '2Sa',
     type: 'old',
     playlistId: '51029551',
+    image: require('assets/2sam.jpg'),
   },
   {
     name: '1 Kings',
@@ -105,6 +107,7 @@ const Books = [
     value_id: '1Ra',
     type: 'old',
     playlistId: '55122432',
+    image: require('assets/1king.jpg'),
   },
   {
     name: '2 Kings',
@@ -114,6 +117,7 @@ const Books = [
     value_id: '2Ra',
     type: 'old',
     playlistId: '78536204',
+    image: require('assets/2king.jpg'),
   },
   {
     name: '1 Chronicles',
@@ -123,6 +127,7 @@ const Books = [
     value_id: '1Ta',
     type: 'old',
     playlistId: '137787467',
+    image: require('assets/1chronicle.jpg'),
   },
   {
     name: '2 Chronicles',
@@ -132,6 +137,7 @@ const Books = [
     value_id: '2Ta',
     type: 'old',
     playlistId: '201343776',
+    image: require('assets/2chronicle.jpg'),
   },
   {
     name: 'Ezra',
@@ -141,6 +147,7 @@ const Books = [
     value_id: 'Ezr',
     type: 'old',
     playlistId: '201347117',
+    image: require('assets/ezra.jpg'),
   },
   {
     name: 'Nehemiah',
@@ -150,6 +157,7 @@ const Books = [
     value_id: 'Neh',
     type: 'old',
     playlistId: '201349877',
+    image: require('assets/nehemiah.jpg'),
   },
   {
     name: 'Esther',
@@ -159,6 +167,7 @@ const Books = [
     value_id: 'Est',
     type: 'old',
     playlistId: '137767348',
+    image: require('assets/esther.jpg'),
   },
   {
     name: 'Job',
@@ -168,6 +177,7 @@ const Books = [
     value_id: 'Ayb',
     type: 'old',
     playlistId: '201353404',
+    image: require('assets/job.jpg'),
   },
   {
     name: 'Psalms',
@@ -177,6 +187,7 @@ const Books = [
     value_id: 'Mzm',
     type: 'old',
     playlistId: '197706713',
+    image: require('assets/psalms.jpg'),
   },
   {
     name: 'Proverbs',
@@ -186,6 +197,7 @@ const Books = [
     value_id: 'Ams',
     type: 'old',
     playlistId: '178411852',
+    image: require('assets/proverbs.jpg'),
   },
   {
     name: 'Ecclesiastes',
@@ -195,6 +207,7 @@ const Books = [
     value_id: 'Pkh',
     type: 'old',
     playlistId: '196745587',
+    image: require('assets/ecclesiastes.jpg'),
   },
   {
     name: 'Song of Solomon',
@@ -204,6 +217,7 @@ const Books = [
     value_id: 'Kid',
     type: 'old',
     playlistId: '196746467',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Isaiah',
@@ -213,6 +227,7 @@ const Books = [
     value_id: 'Yes',
     type: 'old',
     playlistId: '197060630',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Jeremiah',
@@ -222,6 +237,7 @@ const Books = [
     value_id: 'Yer',
     type: 'old',
     playlistId: '197076268',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Lamentations',
@@ -231,6 +247,7 @@ const Books = [
     value_id: 'Rat',
     type: 'old',
     playlistId: '196753226',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Ezekiel',
@@ -240,6 +257,7 @@ const Books = [
     value_id: 'Yeh',
     type: 'old',
     playlistId: '197094631',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Daniel',
@@ -249,6 +267,7 @@ const Books = [
     value_id: 'Dan',
     type: 'old',
     playlistId: '197373044',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Hosea',
@@ -258,6 +277,7 @@ const Books = [
     value_id: 'Hos',
     type: 'old',
     playlistId: '197373735',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Joel',
@@ -267,6 +287,7 @@ const Books = [
     value_id: 'Yoe',
     type: 'old',
     playlistId: '196753456',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Amos',
@@ -276,6 +297,7 @@ const Books = [
     value_id: 'Amo',
     type: 'old',
     playlistId: '197376770',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Obadiah',
@@ -285,6 +307,7 @@ const Books = [
     value_id: 'Oba',
     type: 'old',
     playlistId: '196753357',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Jonah',
@@ -294,6 +317,7 @@ const Books = [
     value_id: 'Yun',
     type: 'old',
     playlistId: '196753344',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Micah',
@@ -303,6 +327,7 @@ const Books = [
     value_id: 'Mik',
     type: 'old',
     playlistId: '197040972',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Nahum',
@@ -312,6 +337,7 @@ const Books = [
     value_id: 'Nah',
     type: 'old',
     playlistId: '197041347',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Habakkuk',
@@ -321,6 +347,7 @@ const Books = [
     value_id: 'Hab',
     type: 'old',
     playlistId: '197041577',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Zephaniah',
@@ -330,6 +357,7 @@ const Books = [
     value_id: 'Zef',
     type: 'old',
     playlistId: '197042184',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Haggai',
@@ -339,6 +367,7 @@ const Books = [
     value_id: 'Hag',
     type: 'old',
     playlistId: '197042334',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Zechariah',
@@ -348,6 +377,7 @@ const Books = [
     value_id: 'Zak',
     type: 'old',
     playlistId: '197379269',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Malachi',
@@ -357,6 +387,7 @@ const Books = [
     value_id: 'Mal',
     type: 'old',
     playlistId: '197039876',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Matthew',
@@ -366,6 +397,7 @@ const Books = [
     value_id: 'Mat',
     type: 'new',
     playlistId: '41313813',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Mark',
@@ -375,6 +407,7 @@ const Books = [
     value_id: 'Mrk',
     type: 'new',
     playlistId: '41484297',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Luke',
@@ -384,6 +417,7 @@ const Books = [
     value_id: 'Luk',
     type: 'new',
     playlistId: '41609263',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'John',
@@ -393,6 +427,7 @@ const Books = [
     value_id: 'Yoh',
     type: 'new',
     playlistId: '41942175',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Acts',
@@ -402,6 +437,7 @@ const Books = [
     value_id: 'Kis',
     type: 'new',
     playlistId: '41943858',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Romans',
@@ -411,6 +447,7 @@ const Books = [
     value_id: 'Rom',
     type: 'new',
     playlistId: '41330668',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: '1 Corinthians',
@@ -420,6 +457,7 @@ const Books = [
     value_id: '1Ko',
     type: 'new',
     playlistId: '55791463',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: '2 Corinthians',
@@ -429,6 +467,7 @@ const Books = [
     value_id: '2Ko',
     type: 'new',
     playlistId: '55795693',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Galatians',
@@ -438,6 +477,7 @@ const Books = [
     value_id: 'Gal',
     type: 'new',
     playlistId: '55807345',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Ephesians',
@@ -447,6 +487,7 @@ const Books = [
     value_id: 'Efe',
     type: 'new',
     playlistId: '55811722',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Philippians',
@@ -456,6 +497,7 @@ const Books = [
     value_id: 'Fil',
     type: 'new',
     playlistId: '55814283',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Colossians',
@@ -465,6 +507,7 @@ const Books = [
     value_id: 'Kol',
     type: 'new',
     playlistId: '55816339',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: '1 Thessalonians',
@@ -474,6 +517,7 @@ const Books = [
     value_id: '1Te',
     type: 'new',
     playlistId: '62478131',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: '2 Thessalonians',
@@ -483,6 +527,7 @@ const Books = [
     value_id: '2Te',
     type: 'new',
     playlistId: '69620942',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: '1 Timothy',
@@ -492,6 +537,7 @@ const Books = [
     value_id: '1Ti',
     type: 'new',
     playlistId: '69622338',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: '2 Timothy',
@@ -501,6 +547,7 @@ const Books = [
     value_id: '2Ti',
     type: 'new',
     playlistId: '69623740',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Titus',
@@ -510,6 +557,7 @@ const Books = [
     value_id: 'Tit',
     type: 'new',
     playlistId: '70166321',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Philemon',
@@ -519,6 +567,7 @@ const Books = [
     value_id: 'Flm',
     type: 'new',
     playlistId: '70167696',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Hebrews',
@@ -528,6 +577,7 @@ const Books = [
     value_id: 'Ibr',
     type: 'new',
     playlistId: '70169807',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'James',
@@ -537,6 +587,7 @@ const Books = [
     value_id: 'Yak',
     type: 'new',
     playlistId: '70172454',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: '1 Peter',
@@ -546,6 +597,7 @@ const Books = [
     value_id: '1Pe',
     type: 'new',
     playlistId: '70422586',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: '2 Peter',
@@ -555,6 +607,7 @@ const Books = [
     value_id: '2Pe',
     type: 'new',
     playlistId: '70424815',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: '1 John',
@@ -564,6 +617,7 @@ const Books = [
     value_id: '1Yo',
     type: 'new',
     playlistId: '71800813',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: '2 John',
@@ -573,6 +627,7 @@ const Books = [
     value_id: '2Yo',
     type: 'new',
     playlistId: '71811294',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: '3 John',
@@ -582,6 +637,7 @@ const Books = [
     value_id: '3Yo',
     type: 'new',
     playlistId: '71811330',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Jude',
@@ -591,6 +647,7 @@ const Books = [
     value_id: 'Yud',
     type: 'new',
     playlistId: '72028672',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Revelation',
@@ -600,6 +657,7 @@ const Books = [
     value_id: 'Wah',
     type: 'new',
     playlistId: '72033886',
+    image: require('assets/genesis.jpg'),
   },
 ];
 

@@ -1,12 +1,20 @@
+import Books from 'constants/Books';
 import React from 'react';
 import { Component } from 'react';
 import { ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { BoxShadow } from 'react-native-shadow';
+import { NavigationScreenProp } from 'react-navigation';
 import { Transition } from 'react-navigation-fluid-transitions';
 import { connect } from 'react-redux';
 
-interface Props {}
+interface Props {
+  navigation: NavigationScreenProp<any, any>;
+}
+
+interface State {
+  searchText: string;
+}
 
 const SHADOW_OPTION = {
   height: 100,
@@ -20,9 +28,12 @@ const SHADOW_OPTION = {
   style: {},
 };
 
-class BookScreen extends Component<Props> {
+class BookScreen extends Component<Props, State> {
+  public state: State = {
+    searchText: '',
+  };
   public render() {
-    const { bible } = this.props;
+    const { searchText } = this.state;
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.container}>
@@ -32,69 +43,44 @@ class BookScreen extends Component<Props> {
             <Text style={styles.title}>Bibleify</Text>
           </View>
           <View style={styles.search}>
-            <TextInput style={styles.input} placeholder={'Search...'} placeholderTextColor={'#999'} />
+            <TextInput
+              style={styles.input}
+              placeholder={'Search...'}
+              placeholderTextColor={'#999'}
+              value={searchText}
+              onChangeText={searchText => this.setState({ searchText })}
+            />
           </View>
 
-          <View style={styles.itemWrap}>
-            <View style={styles.shadowWrap}>
-              <BoxShadow setting={SHADOW_OPTION} />
-            </View>
-            <RectButton onPress={() => {}}>
-              <Transition shared="book">
-                <ImageBackground source={require('assets/genesis.jpg')} style={styles.item} imageStyle={styles.itemImg}>
-                  <Text style={styles.itemText}>Genesis</Text>
-                </ImageBackground>
-              </Transition>
-            </RectButton>
-          </View>
-
-          <View style={styles.itemWrap}>
-            <View style={styles.shadowWrap}>
-              <BoxShadow setting={SHADOW_OPTION} />
-            </View>
-            <RectButton onPress={() => {}}>
-              <ImageBackground source={require('assets/exodus.jpg')} style={styles.item} imageStyle={styles.itemImg}>
-                <Text style={styles.itemText}>Exodus</Text>
-              </ImageBackground>
-            </RectButton>
-          </View>
-
-          <View style={styles.itemWrap}>
-            <View style={styles.shadowWrap}>
-              <BoxShadow setting={SHADOW_OPTION} />
-            </View>
-            <RectButton onPress={() => {}}>
-              <ImageBackground source={require('assets/leviticus.jpg')} style={styles.item} imageStyle={styles.itemImg}>
-                <Text style={styles.itemText}>Leviticus</Text>
-              </ImageBackground>
-            </RectButton>
-          </View>
-
-          <View style={styles.itemWrap}>
-            <View style={styles.shadowWrap}>
-              <BoxShadow setting={SHADOW_OPTION} />
-            </View>
-            <RectButton onPress={() => {}}>
-              <ImageBackground source={require('assets/numbers.jpg')} style={styles.item} imageStyle={styles.itemImg}>
-                <Text style={styles.itemText}>Numbers</Text>
-              </ImageBackground>
-            </RectButton>
-          </View>
-
-          <View style={styles.itemWrap}>
-            <View style={styles.shadowWrap}>
-              <BoxShadow setting={SHADOW_OPTION} />
-            </View>
-            <RectButton onPress={() => {}}>
-              <ImageBackground
-                source={require('assets/deuteronomy.jpg')}
-                style={styles.item}
-                imageStyle={styles.itemImg}
-              >
-                <Text style={styles.itemText}>Deuteronomy</Text>
-              </ImageBackground>
-            </RectButton>
-          </View>
+          {Books.filter(book => {
+            const { searchText } = this.state;
+            if (searchText === '') {
+              return true;
+            }
+            return book.name_id.toLowerCase().indexOf(searchText.toLocaleLowerCase()) !== -1;
+          }).map((book, i) => {
+            return (
+              <View style={styles.itemWrap} key={i}>
+                <View style={styles.shadowWrap}>
+                  <BoxShadow setting={SHADOW_OPTION} />
+                </View>
+                <RectButton
+                  onPress={() => {
+                    this.props.dispatch.bible.setActiveBook(book);
+                    setTimeout(() => {
+                      this.props.navigation.goBack();
+                    }, 100);
+                  }}
+                >
+                  <Transition shared={`book-${book.value}`}>
+                    <ImageBackground source={book.image} style={styles.item} imageStyle={styles.itemImg}>
+                      <Text style={styles.itemText}>{book.name_id}</Text>
+                    </ImageBackground>
+                  </Transition>
+                </RectButton>
+              </View>
+            );
+          })}
         </ScrollView>
       </SafeAreaView>
     );
