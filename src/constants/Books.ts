@@ -7,6 +7,7 @@ const Books = [
     value_id: 'Kej',
     type: 'old',
     playlistId: '41351366',
+    image: require('assets/genesis.jpg'),
   },
   {
     name: 'Exodus',
@@ -16,6 +17,7 @@ const Books = [
     value_id: 'Kel',
     type: 'old',
     playlistId: '42042217',
+    image: require('assets/exodus.jpg'),
   },
   {
     name: 'Leviticus',
@@ -25,6 +27,7 @@ const Books = [
     value_id: 'Ima',
     type: 'old',
     playlistId: '42692804',
+    image: require('assets/leviticus.jpg'),
   },
   {
     name: 'Numbers',
@@ -34,6 +37,7 @@ const Books = [
     value_id: 'Bil',
     type: 'old',
     playlistId: '42797308',
+    image: require('assets/numbers.jpg'),
   },
   {
     name: 'Deuteronomy',
@@ -43,6 +47,7 @@ const Books = [
     value_id: 'Ula',
     type: 'old',
     playlistId: '42803709',
+    image: require('assets/deuteronomy.jpg'),
   },
   {
     name: 'Joshua',
@@ -52,6 +57,7 @@ const Books = [
     value_id: 'Yos',
     type: 'old',
     playlistId: '43555028',
+    image: require('assets/joshua.jpg'),
   },
   {
     name: 'Judges',
@@ -61,6 +67,7 @@ const Books = [
     value_id: 'Hak',
     type: 'old',
     playlistId: '43919544',
+    image: require('assets/judges.jpg'),
   },
   {
     name: 'Ruth',
@@ -70,6 +77,7 @@ const Books = [
     value_id: 'Rut',
     type: 'old',
     playlistId: '45974061',
+    image: require('assets/ruth.jpg'),
   },
   {
     name: '1 Samuel',

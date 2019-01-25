@@ -34,7 +34,7 @@ const AppNavigator = createStackNavigator(
             Book: BookScreen,
           }),
           navigationOptions: {
-            title: 'Passage',
+            title: 'Bible',
             tabBarIcon: PassageIcon,
           },
         },

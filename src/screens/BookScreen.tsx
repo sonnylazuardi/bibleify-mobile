@@ -1,21 +1,10 @@
-import Header from 'components/Header';
 import React from 'react';
 import { Component } from 'react';
-import {
-  Alert,
-  ImageBackground,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from 'react-native';
+import { ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { BoxShadow } from 'react-native-shadow';
-import Icon from 'react-native-vector-icons/Feather';
 import { Transition } from 'react-navigation-fluid-transitions';
+import { connect } from 'react-redux';
 
 interface Props {}
 
@@ -31,13 +20,14 @@ const SHADOW_OPTION = {
   style: {},
 };
 
-export default class BookScreen extends Component<Props> {
+class BookScreen extends Component<Props> {
   public render() {
+    const { bible } = this.props;
     return (
       <SafeAreaView style={styles.container}>
         <ScrollView style={styles.container}>
           <StatusBar backgroundColor="#282C32" barStyle="light-content" />
-          
+
           <View style={styles.header}>
             <Text style={styles.title}>Bibleify</Text>
           </View>
@@ -194,3 +184,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
+
+export default connect(
+  state => ({ state: state.bible }),
+  dispatch => ({ dispatch }),
+)(BookScreen);

@@ -53,19 +53,26 @@ export const bible = {
     },
   },
   effects: {
-    loadVersion() {
+    loadVersion(payload, rootState) {
+      const activeVersion = rootState.bible.activeVersion.value;
       if (Platform.OS == 'ios') {
+        RNFS.copyFile(
+          RNFS.MainBundlePath + `/${activeVersion}.realm`,
+          RNFS.DocumentDirectoryPath + `/${activeVersion}.realm`,
+        );
+      } else {
+        RNFS.copyFileAssets(`${activeVersion}.realm`, `${RNFS.DocumentDirectoryPath}/${activeVersion}.realm`);
       }
-      RNFS.copyFileAssets(`tb.realm`, `${RNFS.DocumentDirectoryPath}/tb.realm`);
     },
-    fetchVerses(payload) {
-      const { activeVersion, activeBook, activeChapter } = payload;
+    fetchVerses(payload, rootState) {
+      const { activeBook, activeChapter } = payload;
+      const activeVersion = rootState.bible.activeVersion.value;
 
       Realm.open({
         schema: [Schema.PassageSchema],
         readOnly: true,
         inMemory: false,
-        path: `tb.realm`,
+        path: `${activeVersion}.realm`,
       }).then(realm => {
         const passages = realm.objects('Passage');
         const filteredPassages = passages.filtered(`book = "${activeBook.value}" AND chapter = "${activeChapter}"`);
