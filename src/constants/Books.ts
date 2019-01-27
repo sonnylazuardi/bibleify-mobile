@@ -13,7 +13,7 @@ const Books = [
     name: 'Exodus',
     name_id: 'Keluaran',
     total: 40,
-    value: '1k',
+    value: 'Exo',
     value_id: 'Kel',
     type: 'old',
     playlistId: '42042217',

@@ -8,7 +8,7 @@ import Realm from 'realm';
 export const bible = {
   state: {
     activeVersion: Versions[4],
-    activeBook: Books[0],
+    activeBook: Books[1],
     activeChapter: 1,
     activeVerse: null,
     jumpText: '',
