@@ -48,7 +48,7 @@ class PassageScreen extends Component<Props> {
         <View style={styles.container}>
           <Header navigation={navigation} />
           <ScrollView style={styles.scroll}>
-            <Transition key={bible.activeBook.value} shared={`book-${bible.activeBook.value}`} appear="flip">
+            <Transition shared={`book-${bible.activeBook.value}`} appear="flip">
               <ImageBackground source={bible.activeBook.image} style={styles.book} imageStyle={styles.bookImg}>
                 <Text style={styles.bookText}>{bible.activeBook.name_id}</Text>
               </ImageBackground>

@@ -8,7 +8,7 @@ import Realm from 'realm';
 export const bible = {
   state: {
     activeVersion: Versions[4],
-    activeBook: Books[1],
+    activeBook: Books[7],
     activeChapter: 1,
     activeVerse: null,
     jumpText: '',
@@ -19,7 +19,7 @@ export const bible = {
       return { ...state, activeChapter: payload };
     },
     setActiveBook(state, payload) {
-      return { ...state, activeBook: payload };
+      return { ...state, activeBook: payload, activeChapter: 1 };
     },
     jumpToVerse(state, payload) {
       const { activeBook, activeChapter, activeVerse } = payload;

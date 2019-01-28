@@ -1,7 +1,17 @@
 import Books from 'constants/Books';
 import React from 'react';
 import { Component } from 'react';
-import { ImageBackground, SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  ImageBackground,
+  SafeAreaView,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  FlatList,
+} from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { BoxShadow } from 'react-native-shadow';
 import { NavigationScreenProp } from 'react-navigation';
@@ -34,25 +44,57 @@ class BookScreen extends Component<Props, State> {
   };
   public render() {
     const { searchText } = this.state;
+    const data = Books.filter(book => {
+      const { searchText } = this.state;
+      if (searchText === '') {
+        return true;
+      }
+      return book.name_id.toLowerCase().indexOf(searchText.toLocaleLowerCase()) !== -1;
+    }).map(book => ({ ...book, key: book.value }));
     return (
       <SafeAreaView style={styles.container}>
-        <ScrollView style={styles.container}>
-          <StatusBar backgroundColor="#282C32" barStyle="light-content" />
+        <StatusBar backgroundColor="#282C32" barStyle="light-content" />
 
-          <View style={styles.header}>
-            <Text style={styles.title}>Bibleify</Text>
-          </View>
-          <View style={styles.search}>
-            <TextInput
-              style={styles.input}
-              placeholder={'Search...'}
-              placeholderTextColor={'#999'}
-              value={searchText}
-              onChangeText={searchText => this.setState({ searchText })}
-            />
-          </View>
+        <View style={styles.header}>
+          <Text style={styles.title}>Bibleify</Text>
+        </View>
+        <View style={styles.search}>
+          <TextInput
+            style={styles.input}
+            placeholder={'Search...'}
+            placeholderTextColor={'#999'}
+            value={searchText}
+            onChangeText={searchText => this.setState({ searchText })}
+          />
+        </View>
 
-          {Books.filter(book => {
+        <FlatList
+          data={data}
+          renderItem={({ item }, i) => {
+            const book = item;
+            return (
+              <View style={styles.itemWrap} key={i}>
+                {/* <View style={styles.shadowWrap}>
+                  <BoxShadow setting={SHADOW_OPTION} />
+                </View> */}
+                <Transition shared={`book-${book.value}`}>
+                  <RectButton
+                    onPress={() => {
+                      this.props.dispatch.bible.setActiveBook(book);
+                      this.props.navigation.push('Passage');
+                    }}
+                  >
+                    <ImageBackground source={book.image} style={styles.item} imageStyle={styles.itemImg}>
+                      <Text style={styles.itemText}>{book.name_id}</Text>
+                    </ImageBackground>
+                  </RectButton>
+                </Transition>
+              </View>
+            );
+          }}
+        />
+
+        {/* {Books.filter(book => {
             const { searchText } = this.state;
             if (searchText === '') {
               return true;
@@ -80,8 +122,7 @@ class BookScreen extends Component<Props, State> {
                 </RectButton>
               </View>
             );
-          })}
-        </ScrollView>
+          })} */}
       </SafeAreaView>
     );
   }
@@ -91,6 +132,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#282C32',
+    // backgroundColor: '#fff',
   },
   scroll: {
     flex: 1,
@@ -101,10 +143,7 @@ const styles = StyleSheet.create({
     margin: 10,
   },
   itemWrap: {
-    paddingHorizontal: 32,
-    paddingVertical: 0,
-    // backgroundColor: '#ffffff22',
-    marginBottom: 20,
+    marginBottom: 4,
   },
   shadowWrap: {
     position: 'absolute',
@@ -115,10 +154,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   item: {
-    backgroundColor: '#ddd',
+    backgroundColor: '#999',
     height: 100,
     flex: 1,
     borderRadius: 12,
+    elevation: 10,
+    marginHorizontal: 32,
+    marginTop: 8,
+    marginBottom: 16,
+    // backgroundColor: '#ffffff22',
   },
   itemImg: {
     borderRadius: 12,
@@ -146,12 +190,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   input: {
-    height: 32,
+    height: 38,
     borderRadius: 8,
     backgroundColor: 'rgba(255,255,255,0.1)',
     paddingHorizontal: 10,
     fontFamily: 'Lato-Regular',
     color: '#fff',
+    lineHeight: 20,
   },
   itemTitle: {
     marginTop: 32,

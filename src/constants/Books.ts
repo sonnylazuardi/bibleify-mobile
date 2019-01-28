@@ -183,7 +183,7 @@ const Books = [
     name: 'Psalms',
     name_id: 'Mazmur',
     total: 150,
-    value: 'Ps',
+    value: 'Psa',
     value_id: 'Mzm',
     type: 'old',
     playlistId: '197706713',

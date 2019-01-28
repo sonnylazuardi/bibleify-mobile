@@ -1,5 +1,5 @@
 //@flow
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   View,
   Text,
@@ -17,40 +17,40 @@ import {
   LayoutAnimation,
   UIManager,
   BackHandler,
-  Keyboard
-} from "react-native";
-const Realm = require("realm");
-import SafeAreaView from "react-native-safe-area-view";
-import DrawerLayout from "react-native-drawer-layout";
-import Books from "../../constants/Books";
-import GestureRecognizer, { swipeDirections } from "react-native-swipe-gestures";
-import Icon from "react-native-vector-icons/Ionicons";
-import Video from "react-native-video";
-import { SOUNDCLOUD_CLIENT_ID } from "../../constants/constants";
-import { bookNameHelper } from "../../helpers";
+  Keyboard,
+} from 'react-native';
+const Realm = require('realm');
+import SafeAreaView from 'react-native-safe-area-view';
+import DrawerLayout from 'react-native-drawer-layout';
+import Books from '../../constants/Books';
+import GestureRecognizer, { swipeDirections } from 'react-native-swipe-gestures';
+import Icon from 'react-native-vector-icons/Ionicons';
+import Video from 'react-native-video';
+import { SOUNDCLOUD_CLIENT_ID } from '../../constants/constants';
+import { bookNameHelper } from '../../helpers';
 
-import MusicControl from "react-native-music-control";
-import MediaPlayerControl from "../../components/MediaPlayerControl";
-import SelectedVerseToolBar from "../../components/SelectedVerseToolBar";
-import MainToolBar from "../../components/MainToolBar";
-import BottomSheet from "../../components/BottomSheet";
-var RNFS = require("react-native-fs");
+import MusicControl from 'react-native-music-control';
+import MediaPlayerControl from '../../components/MediaPlayerControl';
+import SelectedVerseToolBar from '../../components/SelectedVerseToolBar';
+import MainToolBar from '../../components/MainToolBar';
+import BottomSheet from '../../components/BottomSheet';
+var RNFS = require('react-native-fs');
 
 UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 
-const RCTUIManager = require("NativeModules").UIManager;
+const RCTUIManager = require('NativeModules').UIManager;
 
 const PassageSchema = {
-  name: "Passage",
-  primaryKey: "id",
+  name: 'Passage',
+  primaryKey: 'id',
   properties: {
-    id: "string",
-    content: "string",
-    book: "string",
-    chapter: "int",
-    verse: "int",
-    type: "string"
-  }
+    id: 'string',
+    content: 'string',
+    book: 'string',
+    chapter: 'int',
+    verse: 'int',
+    type: 'string',
+  },
 };
 
 class PassageScreen extends Component {
@@ -62,7 +62,7 @@ class PassageScreen extends Component {
     activeBook: Books[0],
     activeChapter: 1,
     activeVerse: 1,
-    jumpText: "",
+    jumpText: '',
     selectedVerses: [],
     streamUrl: null,
     streamChapter: null,
@@ -70,7 +70,7 @@ class PassageScreen extends Component {
     paused: false,
     streamDuration: 0,
     streamCurrentTime: 0,
-    bookPath: "nkjv.realm"
+    bookPath: 'tb.realm',
   };
   componentDidUpdate(prevProps, prevState) {
     if (
@@ -87,12 +87,12 @@ class PassageScreen extends Component {
                 this._scrollView.scrollTo({
                   x: 0,
                   y: oy,
-                  animated: true
+                  animated: true,
                 });
-              }
+              },
             );
             this.setState({
-              selectedVerses: [this.state.activeVerse]
+              selectedVerses: [this.state.activeVerse],
             });
           }
         }, 200);
@@ -104,21 +104,21 @@ class PassageScreen extends Component {
       schema: [PassageSchema],
       readOnly: true,
       inMemory: false,
-      path: this.state.bookPath
+      path: this.state.bookPath,
     }).then(realm => {
       const { activeBook, activeChapter, activeVerse } = this.state;
-      let passages = realm.objects("Passage");
+      let passages = realm.objects('Passage');
       let filteredPassages = passages.filtered(`book = "${activeBook.value}" AND chapter = "${activeChapter}"`);
       const versesRaw = Object.keys(filteredPassages);
       if (versesRaw.length) {
         const verses = versesRaw.map(key => filteredPassages[key]);
         this.setState(
           {
-            verses: verses
+            verses: verses,
           },
           () => {
             callback && callback();
-          }
+          },
         );
       }
     });
@@ -131,16 +131,16 @@ class PassageScreen extends Component {
         this.setState({
           activeBook,
           activeChapter: jumpPassage.chapter,
-          activeVerse: jumpPassage.verse
+          activeVerse: jumpPassage.verse,
         });
       }
     }
   }
   componentDidMount() {
-    BackHandler.addEventListener("hardwareBackPress", () => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
       if (this.state.selectedVerses.length) {
         this.setState({
-          selectedVerses: []
+          selectedVerses: [],
         });
         return true;
       }
@@ -152,17 +152,17 @@ class PassageScreen extends Component {
   }
   _changeActiveBook(book) {
     this.setState({
-      activeBook: book
+      activeBook: book,
     });
   }
   _changeActiveChapter(chapter) {
     this.setState(
       {
-        activeChapter: chapter
+        activeChapter: chapter,
       },
       () => {
         this._drawer.closeDrawer();
-      }
+      },
     );
   }
   _onSwipeLeft(gestureState) {
@@ -172,7 +172,7 @@ class PassageScreen extends Component {
       if (nextChapter <= this.state.activeBook.total) {
         this.setState({
           activeChapter: nextChapter,
-          selectedVerses: []
+          selectedVerses: [],
         });
         setTimeout(() => {
           this._scrollView.scrollTo({ x: 0, y: 0, animated: true });
@@ -187,7 +187,7 @@ class PassageScreen extends Component {
       if (prevChapter > 0) {
         this.setState({
           activeChapter: prevChapter,
-          selectedVerses: []
+          selectedVerses: [],
         });
         setTimeout(() => {
           this._scrollView.scrollTo({ x: 0, y: 0, animated: true });
@@ -250,23 +250,23 @@ class PassageScreen extends Component {
   }
   _onSubmitJump() {
     let jumpText = this.state.jumpText;
-    if (jumpText.indexOf(" ") != -1) {
+    if (jumpText.indexOf(' ') != -1) {
       let currentVerse = 1;
-      if (jumpText.indexOf(":") != -1) {
-        const splitVerse = jumpText.split(":");
+      if (jumpText.indexOf(':') != -1) {
+        const splitVerse = jumpText.split(':');
         currentVerse = parseInt(splitVerse[1]);
         jumpText = splitVerse[0];
       }
-      const splitChapter = jumpText.replace("  ", " ").split(" ");
+      const splitChapter = jumpText.replace('  ', ' ').split(' ');
       const activeBook = Books.filter(
-        book => book.name_id.toLowerCase().indexOf(splitChapter[0].toLowerCase()) != -1
+        book => book.name_id.toLowerCase().indexOf(splitChapter[0].toLowerCase()) != -1,
       )[0];
       const currentChapter = parseInt(splitChapter[1]);
       if (activeBook) {
         this.setState({
           activeBook: activeBook,
           activeChapter: currentChapter,
-          activeVerse: currentVerse
+          activeVerse: currentVerse,
         });
         this._drawer.closeDrawer();
       }
@@ -274,7 +274,7 @@ class PassageScreen extends Component {
   }
   _onClearJump() {
     this.setState({
-      jumpText: ""
+      jumpText: '',
     });
   }
   _onChangeBook() {
@@ -283,28 +283,28 @@ class PassageScreen extends Component {
   }
   _renderDrawer() {
     const { jumpText, bookPath } = this.state;
-    let bookCaption = "New King James Version (NKJV)";
+    let bookCaption = 'New King James Version (NKJV)';
     switch (bookPath) {
-      case "nkjv.realm":
-        bookCaption = "New King James Version (NKJV)";
+      case 'nkjv.realm':
+        bookCaption = 'New King James Version (NKJV)';
         break;
-      case "tb.realm":
-        bookCaption = "Terjemahan Baru (TB)";
+      case 'tb.realm':
+        bookCaption = 'Terjemahan Baru (TB)';
         break;
-      case "net.realm":
-        bookCaption = "New English Translation (NET)";
+      case 'net.realm':
+        bookCaption = 'New English Translation (NET)';
         break;
-      case "jawa.realm":
-        bookCaption = "Bahasa Jawa";
+      case 'jawa.realm':
+        bookCaption = 'Bahasa Jawa';
         break;
-      case "sunda.realm":
-        bookCaption = "Bahasa Sunda";
+      case 'sunda.realm':
+        bookCaption = 'Bahasa Sunda';
         break;
-      case "toba.realm":
-        bookCaption = "Bahasa Batak Toba";
+      case 'toba.realm':
+        bookCaption = 'Bahasa Batak Toba';
         break;
-      case "makasar.realm":
-        bookCaption = "Bahasa Makassar";
+      case 'makasar.realm':
+        bookCaption = 'Bahasa Makassar';
         break;
     }
     return (
@@ -316,8 +316,8 @@ class PassageScreen extends Component {
               <Icon name="ios-book" size={25} color="#fff" />
             </TouchableOpacity>
             <TextInput
-              placeholder={"Jump here"}
-              placeholderTextColor={"rgba(255,255,255,0.3)"}
+              placeholder={'Jump here'}
+              placeholderTextColor={'rgba(255,255,255,0.3)'}
               value={jumpText}
               style={styles.input}
               onSubmitEditing={() => this._onSubmitJump()}
@@ -330,13 +330,13 @@ class PassageScreen extends Component {
           <ScrollView>
             <Text style={styles.separator}>OLD TESTAMENT</Text>
             {Books.filter(
-              book => book.type == "old" && book.name_id.toLowerCase().indexOf(jumpText.toLowerCase()) != -1
+              book => book.type == 'old' && book.name_id.toLowerCase().indexOf(jumpText.toLowerCase()) != -1,
             ).map((book, i) => {
               return this._renderBook(book, i);
             })}
             <Text style={styles.separator}>NEW TESTAMENT</Text>
             {Books.filter(
-              book => book.type == "new" && book.name_id.toLowerCase().indexOf(jumpText.toLowerCase()) != -1
+              book => book.type == 'new' && book.name_id.toLowerCase().indexOf(jumpText.toLowerCase()) != -1,
             ).map((book, i) => {
               return this._renderBook(book, i);
             })}
@@ -353,7 +353,9 @@ class PassageScreen extends Component {
   }
   _onPlayStreaming() {
     const { activeBook, activeChapter } = this.state;
-    const url = `https://api.soundcloud.com/playlists/${activeBook.playlistId}?client_id=${SOUNDCLOUD_CLIENT_ID}&limit=150&offset=0`;
+    const url = `https://api.soundcloud.com/playlists/${
+      activeBook.playlistId
+    }?client_id=${SOUNDCLOUD_CLIENT_ID}&limit=150&offset=0`;
     console.log(url);
 
     fetch(url)
@@ -362,7 +364,7 @@ class PassageScreen extends Component {
         const data = result.tracks.map(item => ({
           stream: item.stream_url,
           title: item.title,
-          permalink: item.permalink
+          permalink: item.permalink,
         }));
         let bookName = bookNameHelper(activeBook.name_id);
         const streamSong = data.filter(item => {
@@ -372,7 +374,7 @@ class PassageScreen extends Component {
           );
         })[0];
         if (streamSong) {
-          console.log("SOOOONG", streamSong);
+          console.log('SOOOONG', streamSong);
           LayoutAnimation.easeInEaseOut();
           if (this.state.streamUrl) {
             this.setState(
@@ -380,7 +382,7 @@ class PassageScreen extends Component {
                 streamUrl: null,
                 streamChapter: null,
                 streamDuration: 0,
-                streamCurrentTime: 0
+                streamCurrentTime: 0,
               },
               () => {
                 setTimeout(() => {
@@ -389,13 +391,13 @@ class PassageScreen extends Component {
                     streamUrl,
                     streamChapter: {
                       activeBook,
-                      activeChapter
+                      activeChapter,
                     },
-                    isLoadingSound: true
+                    isLoadingSound: true,
                   });
-                  console.log("PLAYING", streamUrl);
+                  console.log('PLAYING', streamUrl);
                 }, 1000);
-              }
+              },
             );
           } else {
             const streamUrl = `${streamSong.stream}?client_id=${SOUNDCLOUD_CLIENT_ID}`;
@@ -403,11 +405,11 @@ class PassageScreen extends Component {
               streamUrl,
               streamChapter: {
                 activeBook,
-                activeChapter
+                activeChapter,
               },
-              isLoadingSound: true
+              isLoadingSound: true,
             });
-            console.log("PLAYING", streamUrl);
+            console.log('PLAYING', streamUrl);
           }
         }
       });
@@ -416,17 +418,17 @@ class PassageScreen extends Component {
     const { selectedVerses } = this.state;
     if (selectedVerses.indexOf(verse) != -1) {
       this.setState({
-        selectedVerses: selectedVerses.filter(item => item != verse)
+        selectedVerses: selectedVerses.filter(item => item != verse),
       });
     } else {
       this.setState({
-        selectedVerses: [...selectedVerses, verse]
+        selectedVerses: [...selectedVerses, verse],
       });
     }
   }
   _onBackToolbar() {
     this.setState({
-      selectedVerses: []
+      selectedVerses: [],
     });
   }
   _onCopyVerse() {
@@ -434,12 +436,12 @@ class PassageScreen extends Component {
 
     const contentList = selectedVerses.map(item => {
       const currentVerse = verses.filter(current => current.verse == item)[0];
-      if (!currentVerse) return "";
+      if (!currentVerse) return '';
       return `${currentVerse.content} (${currentVerse.book} ${currentVerse.chapter}:${currentVerse.verse})\n`;
     });
-    Clipboard.setString(contentList.join("\n"));
+    Clipboard.setString(contentList.join('\n'));
     this.setState({
-      selectedVerses: []
+      selectedVerses: [],
     });
   }
   _onShareVerse() {
@@ -447,14 +449,14 @@ class PassageScreen extends Component {
 
     const contentList = selectedVerses.map(item => {
       const currentVerse = verses.filter(current => current.verse == item)[0];
-      if (!currentVerse) return "";
+      if (!currentVerse) return '';
       return `${currentVerse.content} (${currentVerse.book} ${currentVerse.chapter}:${currentVerse.verse})\n`;
     });
-    const shareContent = contentList.join("\n");
+    const shareContent = contentList.join('\n');
     Share.share({
       message: shareContent,
-      title: "Alkitab App",
-      url: ""
+      title: 'Alkitab App',
+      url: '',
     });
   }
   _renderToolbar() {
@@ -484,19 +486,19 @@ class PassageScreen extends Component {
   onPlayProgress = ({ currentTime }) => {
     if (currentTime > 0 && this.state.isLoadingSound) {
       this.setState({
-        isLoadingSound: false
+        isLoadingSound: false,
       });
     }
     this.setState(
       {
-        streamCurrentTime: currentTime
+        streamCurrentTime: currentTime,
       },
       () => {
         MusicControl.updatePlayback({
           state: MusicControl.STATE_PLAYING,
-          elapsedTime: currentTime
+          elapsedTime: currentTime,
         });
-      }
+      },
     );
     // console.log("PROGRESS", currentTime);
   };
@@ -506,56 +508,56 @@ class PassageScreen extends Component {
   onLoad = data => {
     this.setState(
       {
-        streamDuration: data.duration
+        streamDuration: data.duration,
       },
       () => {
-        MusicControl.enableControl("seekForward", false);
-        MusicControl.enableControl("seekBackward", false);
-        MusicControl.enableControl("skipForward", false);
-        MusicControl.enableControl("skipBackward", false);
+        MusicControl.enableControl('seekForward', false);
+        MusicControl.enableControl('seekBackward', false);
+        MusicControl.enableControl('skipForward', false);
+        MusicControl.enableControl('skipBackward', false);
         MusicControl.enableBackgroundMode(true);
 
         const { streamChapter } = this.state;
 
         MusicControl.setNowPlaying({
           title: `${streamChapter && streamChapter.activeBook.name_id} ${streamChapter && streamChapter.activeChapter}`,
-          artist: "Alkitab Suara",
+          artist: 'Alkitab Suara',
           duration: this.state.streamDuration,
-          color: 0xfffffff
+          color: 0xfffffff,
         });
 
-        MusicControl.on("play", () => {
+        MusicControl.on('play', () => {
           this.setState({ paused: false });
         });
-        MusicControl.on("pause", () => {
+        MusicControl.on('pause', () => {
           this.setState({ paused: true });
         });
-        MusicControl.on("nextTrack", () => {});
-        MusicControl.on("previousTrack", () => {});
+        MusicControl.on('nextTrack', () => {});
+        MusicControl.on('previousTrack', () => {});
 
         MusicControl.updatePlayback({
-          state: MusicControl.STATE_PLAYING
+          state: MusicControl.STATE_PLAYING,
         });
-      }
+      },
     );
   };
 
   onTogglePaused() {
     this.setState(
       {
-        paused: !this.state.paused
+        paused: !this.state.paused,
       },
       () => {
         if (this.state.paused) {
           MusicControl.updatePlayback({
-            state: MusicControl.STATE_PAUSED
+            state: MusicControl.STATE_PAUSED,
           });
         } else {
           MusicControl.updatePlayback({
-            state: MusicControl.STATE_PLAYING
+            state: MusicControl.STATE_PLAYING,
           });
         }
-      }
+      },
     );
   }
 
@@ -563,15 +565,15 @@ class PassageScreen extends Component {
     LayoutAnimation.easeInEaseOut();
     this.setState({
       streamUrl: null,
-      streamChapter: null
+      streamChapter: null,
     });
   }
 
   _renderPlayer() {
     const { streamUrl, streamChapter, paused, isLoadingSound, streamDuration, streamCurrentTime } = this.state;
-    console.log("current", streamCurrentTime, "duration", streamDuration);
-    const progress = streamCurrentTime / streamDuration * 100;
-    console.log("PROGRESS", progress);
+    console.log('current', streamCurrentTime, 'duration', streamDuration);
+    const progress = (streamCurrentTime / streamDuration) * 100;
+    console.log('PROGRESS', progress);
     return (
       <MediaPlayerControl
         streamUrl={streamUrl}
@@ -592,10 +594,10 @@ class PassageScreen extends Component {
     RNFS.unlink(RNFS.DocumentDirectoryPath + `/${book}.realm.lock`);
     this.setState(
       {
-        bookPath: `${book}.realm`
+        bookPath: `${book}.realm`,
       },
       () => {
-        if (Platform.OS == "android") {
+        if (Platform.OS == 'android') {
           RNFS.copyFileAssets(`${book}.realm.lock`, RNFS.DocumentDirectoryPath + `/${book}.realm.lock`);
           RNFS.copyFileAssets(`${book}.realm`, RNFS.DocumentDirectoryPath + `/${book}.realm`).then(() => {
             this.loadPassage();
@@ -605,20 +607,19 @@ class PassageScreen extends Component {
           try {
             RNFS.copyFile(
               RNFS.MainBundlePath + `/${book}.realm.lock`,
-              RNFS.DocumentDirectoryPath + `/${book}.realm.lock`
+              RNFS.DocumentDirectoryPath + `/${book}.realm.lock`,
             );
-            RNFS.copyFile(
-              RNFS.MainBundlePath + `/${book}.realm`,
-              RNFS.DocumentDirectoryPath + `/${book}.realm`
-            ).then(() => {
-              this.loadPassage();
-              this._bottomSheet.close();
-            });
+            RNFS.copyFile(RNFS.MainBundlePath + `/${book}.realm`, RNFS.DocumentDirectoryPath + `/${book}.realm`).then(
+              () => {
+                this.loadPassage();
+                this._bottomSheet.close();
+              },
+            );
           } catch (e) {
-            console.log("FILE ALREADY EXISTS");
+            console.log('FILE ALREADY EXISTS');
           }
         }
-      }
+      },
     );
   }
 
@@ -633,47 +634,47 @@ class PassageScreen extends Component {
         title="Choose Book"
         options={[
           {
-            title: "Terjemahan Baru (TB)",
+            title: 'Terjemahan Baru (TB)',
             onPress: () => {
-              this._onLoadBook("tb");
-            }
+              this._onLoadBook('tb');
+            },
           },
           {
-            title: "New King James Version (NKJV)",
+            title: 'New King James Version (NKJV)',
             onPress: () => {
-              this._onLoadBook("nkjv");
-            }
+              this._onLoadBook('nkjv');
+            },
           },
           {
-            title: "New English Translation (NET)",
+            title: 'New English Translation (NET)',
             onPress: () => {
-              this._onLoadBook("net");
-            }
+              this._onLoadBook('net');
+            },
           },
           {
-            title: "Bahasa Jawa",
+            title: 'Bahasa Jawa',
             onPress: () => {
-              this._onLoadBook("jawa");
-            }
+              this._onLoadBook('jawa');
+            },
           },
           {
-            title: "Bahasa Sunda",
+            title: 'Bahasa Sunda',
             onPress: () => {
-              this._onLoadBook("sunda");
-            }
+              this._onLoadBook('sunda');
+            },
           },
           {
-            title: "Bahasa Batak Toba",
+            title: 'Bahasa Batak Toba',
             onPress: () => {
-              this._onLoadBook("toba");
-            }
+              this._onLoadBook('toba');
+            },
           },
           {
-            title: "Bahasa Makassar",
+            title: 'Bahasa Makassar',
             onPress: () => {
-              this._onLoadBook("makasar");
-            }
-          }
+              this._onLoadBook('makasar');
+            },
+          },
         ]}
         isOpen={false}
       />
@@ -684,7 +685,7 @@ class PassageScreen extends Component {
     const { verses, activeBook, activeChapter, streamUrl, streamChapter, paused, isLoadingSound } = this.state;
     const swipeConfig = {
       velocityThreshold: 0.3,
-      directionalOffsetThreshold: 50
+      directionalOffsetThreshold: 50,
     };
     return (
       <View style={{ flex: 1 }}>
@@ -712,11 +713,11 @@ class PassageScreen extends Component {
                 config={swipeConfig}
               >
                 {verses.map((verse, i) => {
-                  const isTitle = verse.type == "t";
+                  const isTitle = verse.type == 't';
                   const { selectedVerses } = this.state;
                   const isSelected = selectedVerses.indexOf(verse.verse) != -1;
                   return (
-                    <View key={i} ref={"verse" + verse.verse} style={[isSelected ? styles.selectedVerse : null]}>
+                    <View key={i} ref={'verse' + verse.verse} style={[isSelected ? styles.selectedVerse : null]}>
                       <TouchableOpacity activeOpacity={0.7} onPress={() => this._onSelectVerse(verse.verse)}>
                         <Text
                           style={[styles.text, isTitle ? styles.title : null, isSelected ? styles.textSelected : null]}
@@ -757,141 +758,141 @@ class PassageScreen extends Component {
 
 const styles = StyleSheet.create({
   toolbar: {
-    paddingTop: Platform.OS == "ios" ? 20 : 0,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#1f364d",
-    height: Platform.OS == "ios" ? 80 : 60
+    paddingTop: Platform.OS == 'ios' ? 20 : 0,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#1f364d',
+    height: Platform.OS == 'ios' ? 80 : 60,
   },
   titleButton: {
     flex: 1,
-    paddingHorizontal: 25
+    paddingHorizontal: 25,
   },
   toolbarTitle: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 20,
-    fontWeight: "300",
-    backgroundColor: "transparent"
+    fontWeight: '300',
+    backgroundColor: 'transparent',
   },
   innerScroll: {
-    paddingVertical: 15
+    paddingVertical: 15,
   },
   actions: {
-    flexDirection: "row",
-    marginRight: 10
+    flexDirection: 'row',
+    marginRight: 10,
   },
   actionButton: {
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   icon: {},
   container: {
     flex: 1,
-    backgroundColor: "#fff"
+    backgroundColor: '#fff',
   },
   drawerWrapper: {
-    backgroundColor: "#000",
+    backgroundColor: '#000',
     flex: 1,
-    paddingTop: 20
+    paddingTop: 20,
   },
   text: {
-    color: "#444",
+    color: '#444',
     lineHeight: 30,
-    paddingHorizontal: 25
+    paddingHorizontal: 25,
   },
   title: {
-    fontWeight: "900"
+    fontWeight: '900',
   },
   separator: {
-    fontWeight: "900",
-    color: "rgba(255,255,255,0.4)",
+    fontWeight: '900',
+    color: 'rgba(255,255,255,0.4)',
     fontSize: 10,
     marginVertical: 10,
-    marginLeft: 20
+    marginLeft: 20,
   },
   book: {
     paddingHorizontal: 25,
-    paddingVertical: 20
+    paddingVertical: 20,
   },
   bookText: {
-    color: "#fff",
-    fontWeight: "300"
+    color: '#fff',
+    fontWeight: '300',
   },
   bookActive: {
-    backgroundColor: "#26405A"
+    backgroundColor: '#26405A',
   },
   chapterSelector: {
     height: 60,
-    backgroundColor: "#26405A"
+    backgroundColor: '#26405A',
   },
   chapter: {
     height: 60,
     width: 60,
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   chapterText: {
-    color: "#fff"
+    color: '#fff',
   },
   chapterActive: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center"
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   chapterTextActive: {
-    color: "#0D233A"
+    color: '#0D233A',
   },
   chapterScroll: {
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
   },
   verseNumber: {
-    fontWeight: "900",
+    fontWeight: '900',
     paddingRight: 20,
-    color: "#999",
-    fontSize: 10
+    color: '#999',
+    fontSize: 10,
   },
   drawerHeader: {
-    height: 100
+    height: 100,
   },
   drawerVersion: {
-    flexDirection: "row",
+    flexDirection: 'row',
     height: 25,
-    alignItems: "center",
+    alignItems: 'center',
     paddingHorizontal: 20,
-    flex: 1
+    flex: 1,
   },
   versionText: {
-    color: "#fff",
-    flex: 1
+    color: '#fff',
+    flex: 1,
   },
   input: {
     flex: 1,
     height: 20,
-    backgroundColor: "#26405A",
+    backgroundColor: '#26405A',
     margin: 5,
     marginBottom: 10,
     marginHorizontal: 10,
     borderRadius: 7,
     paddingHorizontal: 10,
-    color: "#fff",
-    fontSize: 13
+    color: '#fff',
+    fontSize: 13,
   },
   clearJump: {
-    position: "absolute",
+    position: 'absolute',
     right: 10,
     top: 55,
     height: 30,
     width: 30,
-    backgroundColor: "transparent"
+    backgroundColor: 'transparent',
   },
   selectedVerse: {
-    backgroundColor: "#ddd"
+    backgroundColor: '#ddd',
   },
   textSelected: {
-    color: "#000"
-  }
+    color: '#000',
+  },
 });
 
 export default PassageScreen;
