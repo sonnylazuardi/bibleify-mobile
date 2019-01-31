@@ -49,7 +49,7 @@ class PassageScreen extends Component<Props> {
           <Header navigation={navigation} />
           <ScrollView style={styles.scroll}>
             <Transition shared={`book-${bible.activeBook.value}`} appear="flip">
-              <ImageBackground source={bible.activeBook.image} style={styles.book} imageStyle={styles.bookImg}>
+              <ImageBackground source={bible.activeBook.image} style={styles.book}>
                 <Text style={styles.bookText}>{bible.activeBook.name_id}</Text>
               </ImageBackground>
             </Transition>
@@ -76,11 +76,11 @@ class PassageScreen extends Component<Props> {
           </ScrollView>
           <View style={styles.actionsWrap} pointerEvents={'box-none'}>
             <RectButton style={styles.actionBtn} onPress={() => this.onPrevious()}>
-              <Icon size={18} name="arrow-left" color="#fff" />
+              <Icon size={18} name="chevron-left" color="#fff" />
             </RectButton>
 
             <RectButton style={styles.actionBtn} onPress={() => this.onNext()}>
-              <Icon size={18} name="arrow-right" color="#fff" />
+              <Icon size={18} name="chevron-right" color="#fff" />
             </RectButton>
           </View>
         </View>
@@ -110,6 +110,8 @@ const styles = StyleSheet.create({
   },
   content: {
     paddingRight: 16,
+    paddingTop: 32,
+    paddingBottom: 48,
   },
   actionBtn: {
     width: 48,
@@ -135,13 +137,11 @@ const styles = StyleSheet.create({
     left: 16,
   },
   book: {
-    backgroundColor: '#ddd',
     height: 200,
     flex: 1,
   },
-  bookImg: {},
   itemTitle: {
-    marginTop: 32,
+    marginTop: 16,
     marginBottom: 16,
     fontSize: 26,
     color: '#fff',

@@ -2,6 +2,7 @@ import Books from 'constants/Books';
 import React from 'react';
 import { Component } from 'react';
 import {
+  FlatList,
   ImageBackground,
   SafeAreaView,
   ScrollView,
@@ -10,7 +11,6 @@ import {
   Text,
   TextInput,
   View,
-  FlatList,
 } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { BoxShadow } from 'react-native-shadow';
@@ -70,25 +70,23 @@ class BookScreen extends Component<Props, State> {
 
         <FlatList
           data={data}
-          renderItem={({ item }, i) => {
+          renderItem={({ item, index }) => {
             const book = item;
             return (
-              <View style={styles.itemWrap} key={i}>
-                {/* <View style={styles.shadowWrap}>
-                  <BoxShadow setting={SHADOW_OPTION} />
-                </View> */}
-                <Transition shared={`book-${book.value}`}>
-                  <RectButton
-                    onPress={() => {
-                      this.props.dispatch.bible.setActiveBook(book);
-                      this.props.navigation.push('Passage');
-                    }}
-                  >
-                    <ImageBackground source={book.image} style={styles.item} imageStyle={styles.itemImg}>
+              <View style={styles.itemWrap} key={index}>
+                <RectButton
+                  onPress={() => {
+                    this.props.dispatch.bible.setActiveBook(book);
+                    this.props.navigation.push('Passage');
+                  }}
+                  style={styles.itemImg}
+                >
+                  <Transition shared={`book-${book.value}`}>
+                    <ImageBackground source={book.image} style={styles.item}>
                       <Text style={styles.itemText}>{book.name_id}</Text>
                     </ImageBackground>
-                  </RectButton>
-                </Transition>
+                  </Transition>
+                </RectButton>
               </View>
             );
           }}
@@ -154,7 +152,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   item: {
-    backgroundColor: '#999',
     height: 100,
     flex: 1,
     borderRadius: 12,
@@ -166,6 +163,7 @@ const styles = StyleSheet.create({
   },
   itemImg: {
     borderRadius: 12,
+    overflow: 'hidden',
   },
   itemText: {
     color: '#fff',

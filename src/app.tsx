@@ -30,8 +30,8 @@ const AppNavigator = createStackNavigator(
       {
         Home: {
           screen: FluidNavigator({
-            Passage: PassageScreen,
             Book: BookScreen,
+            Passage: PassageScreen,
           }),
           navigationOptions: {
             title: 'Bible',
@@ -39,7 +39,7 @@ const AppNavigator = createStackNavigator(
           },
         },
         Search: SearchScreen,
-        // Settings: SettingScreen,
+        Settings: SettingScreen,
       },
       {
         tabBarOptions: {
