@@ -11,12 +11,14 @@ import {
   Text,
   TextInput,
   View,
+  Dimensions,
 } from 'react-native';
-import { RectButton } from 'react-native-gesture-handler';
+import { RectButton, BorderlessButton } from 'react-native-gesture-handler';
 import { BoxShadow } from 'react-native-shadow';
 import { NavigationScreenProp } from 'react-navigation';
 import { Transition } from 'react-navigation-fluid-transitions';
 import { connect } from 'react-redux';
+import Icon from 'react-native-vector-icons/Feather';
 
 interface Props {
   navigation: NavigationScreenProp<any, any>;
@@ -24,24 +26,74 @@ interface Props {
 
 interface State {
   searchText: string;
+  activeBook: any | null;
+  activeChapter: number;
 }
-
-const SHADOW_OPTION = {
-  height: 100,
-  width: 280,
-  color: '#000000',
-  border: 30,
-  radius: 20,
-  opacity: 0.4,
-  x: 0,
-  y: 15,
-  style: {},
-};
 
 class BookScreen extends Component<Props, State> {
   public state: State = {
     searchText: '',
+    activeBook: null,
+    activeChapter: 1,
   };
+  public renderChapterPicker() {
+    if (!this.state.activeBook) {
+      return null;
+    }
+    const chapters = [];
+    for (let i = 0; i < this.state.activeBook.total; i++) {
+      chapters.push(i);
+    }
+    return (
+      <View style={styles.modal}>
+        <View style={styles.cardWrap}>
+          <Text style={styles.cardTitle}>{this.state.activeBook.name_id}</Text>
+          <View style={styles.card}>
+            <ScrollView style={styles.scroll}>
+              <View style={styles.content}>
+                {chapters.map((chapter, i) => {
+                  const currentChapter = i + 1;
+                  const isActive = currentChapter === this.state.activeChapter;
+                  return (
+                    <BorderlessButton
+                      style={[styles.verseBox, isActive ? styles.verseActive : null]}
+                      key={i}
+                      onPress={() => {
+                        this.setState({ activeChapter: currentChapter });
+                      }}
+                    >
+                      <Text style={[styles.verseBoxText, isActive ? styles.verseActiveText : null]}>
+                        {currentChapter}
+                      </Text>
+                    </BorderlessButton>
+                  );
+                })}
+              </View>
+            </ScrollView>
+
+            <View style={styles.actions}>
+              <RectButton style={styles.okBtn} onPress={() => this.setState({ activeBook: null })}>
+                <Icon size={18} name="x-circle" color="#282C32" />
+                <Text style={styles.okBtnText}>Cancel</Text>
+              </RectButton>
+              <RectButton
+                style={[styles.okBtn, styles.defaultBtn]}
+                onPress={() => {
+                  this.props.dispatch.bible.setActiveBook(this.state.activeBook);
+                  this.props.dispatch.bible.setActiveChapter(this.state.activeChapter);
+                  this.setState({ activeBook: null });
+                  this.props.navigation.push('Passage');
+                }}
+              >
+                <Icon size={18} name="check-circle" color="#fff" />
+                <Text style={[styles.okBtnText, styles.defaultBtnText]}>OK</Text>
+              </RectButton>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  }
   public render() {
     const { searchText } = this.state;
     const data = Books.filter(book => {
@@ -76,8 +128,7 @@ class BookScreen extends Component<Props, State> {
               <View style={styles.itemWrap} key={index}>
                 <RectButton
                   onPress={() => {
-                    this.props.dispatch.bible.setActiveBook(book);
-                    this.props.navigation.push('Passage');
+                    this.setState({ activeBook: book });
                   }}
                   style={styles.itemImg}
                 >
@@ -92,45 +143,56 @@ class BookScreen extends Component<Props, State> {
           }}
         />
 
-        {/* {Books.filter(book => {
-            const { searchText } = this.state;
-            if (searchText === '') {
-              return true;
-            }
-            return book.name_id.toLowerCase().indexOf(searchText.toLocaleLowerCase()) !== -1;
-          }).map((book, i) => {
-            return (
-              <View style={styles.itemWrap} key={i}>
-                <View style={styles.shadowWrap}>
-                  <BoxShadow setting={SHADOW_OPTION} />
-                </View>
-                <RectButton
-                  onPress={() => {
-                    this.props.dispatch.bible.setActiveBook(book);
-                    setTimeout(() => {
-                      this.props.navigation.goBack();
-                    }, 100);
-                  }}
-                >
-                  <Transition shared={`book-${book.value}`}>
-                    <ImageBackground source={book.image} style={styles.item} imageStyle={styles.itemImg}>
-                      <Text style={styles.itemText}>{book.name_id}</Text>
-                    </ImageBackground>
-                  </Transition>
-                </RectButton>
-              </View>
-            );
-          })} */}
+        {this.renderChapterPicker()}
       </SafeAreaView>
     );
   }
 }
+
+const shadowStyle = {
+  elevation: 2,
+  shadowColor: '#333',
+  shadowOpacity: 0.5,
+  shadowRadius: 5,
+  shadowOffset: {
+    width: 0,
+    height: 5,
+  },
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#282C32',
     // backgroundColor: '#fff',
+  },
+  cardWrap: {
+    height: 380,
+    flex: 1,
+  },
+  actions: {
+    height: 48,
+    flexDirection: 'row',
+    marginTop: 16,
+  },
+  okBtnText: {
+    color: '#282C32',
+    fontFamily: 'Lato-Black',
+    marginLeft: 10,
+  },
+  okBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 6,
+  },
+  cardTitle: {
+    color: '#fff',
+    fontFamily: 'Lato-Black',
+    marginHorizontal: 16,
+    marginBottom: 16,
+    fontSize: 20,
   },
   scroll: {
     flex: 1,
@@ -211,6 +273,51 @@ const styles = StyleSheet.create({
   itemVerse: {
     color: '#ffffff66',
     fontWeight: '700',
+  },
+  modal: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    top: 0,
+    backgroundColor: 'rgba(0,0,0,0.7)',
+  },
+  card: {
+    flex: 1,
+    marginHorizontal: 16,
+    marginBottom: 16,
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 16,
+  },
+  content: {
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+  },
+  verseBox: {
+    width: 48,
+    height: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  verseBoxText: {
+    fontFamily: 'Lato-Black',
+    fontSize: 16,
+  },
+  defaultBtn: {
+    backgroundColor: '#282C32',
+  },
+  defaultBtnText: {
+    color: '#fff',
+  },
+  verseActive: {
+    backgroundColor: '#282C32',
+    borderRadius: 24,
+  },
+  verseActiveText: {
+    color: '#fff',
   },
 });
 
